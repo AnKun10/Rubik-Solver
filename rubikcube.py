@@ -242,10 +242,3 @@ class RubikCube:
 
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
-
-cube = RubikCube(state="111111111222222222333333333444444444555555555666666666")
-cube.reset()
-cube.show()
-print("---------------------------------------------------------")
-cube.D()
-cube.show()
