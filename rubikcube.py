@@ -19,7 +19,7 @@ class RubikCube:
                 if len(self.colors) == 6:
                     break
             self.cube = [[[c for c in state[r + s:r + s + self.n]] for r in range(0, self.n ** 2, self.n)] for s in
-                         range(0, len(state), 6)]
+                         range(0, len(state), 9)]
         else:
             self.n = n
             self.colors = colors
