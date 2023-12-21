@@ -85,7 +85,7 @@ class RubikCube:
             elif a[0] == 's':
                 self.side_rotation(r, a[1])
 
-    def horizontal_rotation(self, row, direction):
+    def _horizontal_rotation(self, row, direction):
         """
         Rotates the Rubik Cube in horizontal direction
         :param row: (int) the selected row for horizontal rotation
@@ -98,7 +98,7 @@ class RubikCube:
                                                                                               self.cube[3][row],
                                                                                               self.cube[4][row],
                                                                                               self.cube[1][row])
-                #Rotate the connected side
+                # Rotate the connected side
                 if row == 0:
                     self.cube[0] = [[self.cube[0][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
                 elif row == self.n - 1:
@@ -115,7 +115,7 @@ class RubikCube:
                 elif row == self.n - 1:
                     self.cube[5] = [[self.cube[5][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
 
-    def vertical_rotation(self, col, direction):
+    def _vertical_rotation(self, col, direction):
         """
         Rotates the Rubik Cube in vertical direction
         :param col: (int) the selected column for vertical rotation
@@ -138,18 +138,18 @@ class RubikCube:
                         self.cube[4][-i - 1][-col - 1])
 
             # Rotate the connected side
-            if direction == 0: # Rotate down
+            if direction == 0:  # Rotate down
                 if col == 0:
                     self.cube[1] = [[self.cube[1][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
                 elif col == self.n - 1:
                     self.cube[3] = [[self.cube[3][i][r] for i in range(self.n)] for r in range(self.n - 1, -1, -1)]
-            elif direction == 1: # Rotate up
+            elif direction == 1:  # Rotate up
                 if col == 0:
                     self.cube[1] = [[self.cube[1][i][r] for i in range(self.n)] for r in range(self.n - 1, -1, -1)]
                 elif col == self.n - 1:
                     self.cube[3] = [[self.cube[3][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
 
-    def side_rotation(self, col, direction):
+    def _side_rotation(self, col, direction):
         """
         Rotates the Rubik Cube in side direction
         :param col: (int) the selected column for vertical rotation
@@ -172,13 +172,80 @@ class RubikCube:
                                    self.cube[3][i][-col - 1])
 
             # Rotate the connected side
-            if direction == 0: # Rotate down
+            if direction == 0:  # Rotate down
                 if col == 0:
                     self.cube[4] = [[self.cube[4][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
                 elif col == self.n - 1:
                     self.cube[2] = [[self.cube[2][i][r] for i in range(self.n)] for r in range(self.n - 1, -1, -1)]
-            elif direction == 1: # Rotate up
+            elif direction == 1:  # Rotate up
                 if col == 0:
                     self.cube[4] = [[self.cube[4][i][r] for i in range(self.n)] for r in range(self.n - 1, -1, -1)]
                 elif col == self.n - 1:
                     self.cube[2] = [[self.cube[2][i][r] for i in range(self.n - 1, -1, -1)] for r in range(self.n)]
+
+    def U(self):
+        self._horizontal_rotation(0, 0)
+
+    def U2(self):
+        self.U()
+        self.U()
+
+    def Ui(self):
+        self._horizontal_rotation(0, 1)
+
+    def L(self):
+        self._vertical_rotation(0, 0)
+
+    def L2(self):
+        self.L()
+        self.L()
+
+    def Li(self):
+        self._vertical_rotation(0, 1)
+
+    def F(self):
+        self._side_rotation(self.n - 1, 1)
+
+    def F2(self):
+        self.F()
+        self.F()
+
+    def Fi(self):
+        self._side_rotation(self.n - 1, 0)
+
+    def R(self):
+        self._vertical_rotation(self.n - 1, 1)
+
+    def R2(self):
+        self.R()
+        self.R()
+
+    def Ri(self):
+        self._vertical_rotation(self.n - 1, 0)
+
+    def B(self):
+        self._side_rotation(0, 0)
+
+    def B2(self):
+        self.B()
+        self.B()
+
+    def Bi(self):
+        self._side_rotation(0, 1)
+
+    def D(self):
+        self._horizontal_rotation(self.n - 1, 1)
+
+    def D2(self):
+        self.D()
+        self.D()
+
+    def Di(self):
+        self._horizontal_rotation(self.n - 1, 0)
+
+cube = RubikCube(state="111111111222222222333333333444444444555555555666666666")
+cube.reset()
+cube.show()
+print("---------------------------------------------------------")
+cube.D()
+cube.show()
