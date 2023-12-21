@@ -74,16 +74,14 @@ class RubikCube:
         :return: None
         """
         rot_num = randint(min_rot, max_rot)
-        actions = [('h', 0), ('h', 1), ('v', 0), ('v', 1), ('s', 0), ('s', 1)]
-        for i in range(rot_num):
-            a = choice(actions)
+        # Action = 0 (U), 1 (U2), 3 (Ui), 4 (L), ... , 16 (D2), 17(Di)
+        actions = [self.U, self.U2, self.Ui, self.L, self.L2, self.Li, self.F, self.F2, self.Fi, self.R, self.R2,
+                   self.Ri, self.B, self.B2, self.Bi, self.D, self.D2, self.Di]
+
+        for _ in range(rot_num):
+            a = choice(range(len(actions)))
             r = randint(0, self.n - 1)
-            if a[0] == 'h':
-                self.horizontal_rotation(r, a[1])
-            elif a[0] == 'v':
-                self.vertical_rotation(r, a[1])
-            elif a[0] == 's':
-                self.side_rotation(r, a[1])
+            actions[a]()
 
     def _horizontal_rotation(self, row, direction):
         """
