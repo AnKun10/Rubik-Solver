@@ -8,7 +8,7 @@ class RubikCube:
         Initializes a new Rubik Cube
         :param n: (int) size of the nxn Rubik Cube
         :param colors: (list) contain all the colors of the Rubik Cube
-        :param state: (string) current state of the Rubik Cube (ex: "rrrwrwrgryrywwwwrwbrbggggggwowyyyyyygygbbbbbbooobooooo")
+        :param state: (string) current state of the Rubik Cube (ex: "000000000111111111222222222333333333444444444555555555")
         :param history: (list) list of rotation history
         """
         self.history = history
@@ -95,6 +95,10 @@ class RubikCube:
         self.history = []
 
     def show_history(self):
+        """
+        Print rotation history
+        :return: None
+        """
         for move in self.history:
             print(move, end=" ")
 
@@ -201,8 +205,8 @@ class RubikCube:
         self.history.append("U")
 
     def U2(self):
-        self.U()
-        self.U()
+        self._horizontal_rotation(0, 0)
+        self._horizontal_rotation(0, 0)
         self.history.append("U2")
 
     def Ui(self):
@@ -214,8 +218,8 @@ class RubikCube:
         self.history.append("L")
 
     def L2(self):
-        self.L()
-        self.L()
+        self._vertical_rotation(0, 0)
+        self._vertical_rotation(0, 0)
         self.history.append("L2")
 
     def Li(self):
@@ -227,8 +231,8 @@ class RubikCube:
         self.history.append("F")
 
     def F2(self):
-        self.F()
-        self.F()
+        self._side_rotation(self.n - 1, 1)
+        self._side_rotation(self.n - 1, 1)
         self.history.append("F2")
 
     def Fi(self):
@@ -240,8 +244,8 @@ class RubikCube:
         self.history.append("R")
 
     def R2(self):
-        self.R()
-        self.R()
+        self._vertical_rotation(self.n - 1, 1)
+        self._vertical_rotation(self.n - 1, 1)
         self.history.append("R2")
 
     def Ri(self):
@@ -253,8 +257,8 @@ class RubikCube:
         self.history.append("B")
 
     def B2(self):
-        self.B()
-        self.B()
+        self._side_rotation(0, 0)
+        self._side_rotation(0, 0)
         self.history.append("B2")
 
     def Bi(self):
@@ -266,10 +270,18 @@ class RubikCube:
         self.history.append("D")
 
     def D2(self):
-        self.D()
-        self.D()
+        self._horizontal_rotation(self.n - 1, 1)
+        self._horizontal_rotation(self.n - 1, 1)
         self.history.append("D2")
 
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
         self.history.append("D'")
+
+cube = RubikCube(state = "000000000111111111222222222333333333444444444555555555")
+cube.shuffle()
+cube.show()
+cube.U()
+cube.Fi()
+cube.R2()
+cube.show_history()
