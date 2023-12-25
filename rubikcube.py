@@ -3,13 +3,15 @@ from math import sqrt
 
 
 class RubikCube:
-    def __init__(self, n=3, colors=['w', 'o', 'g', 'r', 'b', 'y'], state=None):
+    def __init__(self, n=3, colors=['w', 'o', 'g', 'r', 'b', 'y'], state=None, history=[]):
         """
         Initializes a new Rubik Cube
         :param n: (int) size of the nxn Rubik Cube
         :param colors: (list) contain all the colors of the Rubik Cube
         :param state: (string) current state of the Rubik Cube (ex: "rrrwrwrgryrywwwwrwbrbggggggwowyyyyyygygbbbbbbooobooooo")
+        :param history: (list) list of rotation history
         """
+        self.history = history
         if state:
             self.n = int(sqrt(len(state) / 6))
             self.colors = []
@@ -38,6 +40,7 @@ class RubikCube:
         :return: None
         """
         self.cube = [[[s for c in range(self.n)] for r in range(self.n)] for s in self.colors]
+        self.clear_history()
 
     def solved(self):
         """
@@ -82,6 +85,18 @@ class RubikCube:
             a = choice(range(len(actions)))
             r = randint(0, self.n - 1)
             actions[a]()
+        self.clear_history()
+
+    def clear_history(self):
+        """
+        Clear the history
+        :return: None
+        """
+        self.history = []
+
+    def show_history(self):
+        for move in self.history:
+            print(move, end=" ")
 
     def _horizontal_rotation(self, row, direction):
         """
@@ -183,60 +198,78 @@ class RubikCube:
 
     def U(self):
         self._horizontal_rotation(0, 0)
+        self.history.append("U")
 
     def U2(self):
         self.U()
         self.U()
+        self.history.append("U2")
 
     def Ui(self):
         self._horizontal_rotation(0, 1)
+        self.history.append("U'")
 
     def L(self):
         self._vertical_rotation(0, 0)
+        self.history.append("L")
 
     def L2(self):
         self.L()
         self.L()
+        self.history.append("L2")
 
     def Li(self):
         self._vertical_rotation(0, 1)
+        self.history.append("L'")
 
     def F(self):
         self._side_rotation(self.n - 1, 1)
+        self.history.append("F")
 
     def F2(self):
         self.F()
         self.F()
+        self.history.append("F2")
 
     def Fi(self):
         self._side_rotation(self.n - 1, 0)
+        self.history.append("F'")
 
     def R(self):
         self._vertical_rotation(self.n - 1, 1)
+        self.history.append("R")
 
     def R2(self):
         self.R()
         self.R()
+        self.history.append("R2")
 
     def Ri(self):
         self._vertical_rotation(self.n - 1, 0)
+        self.history.append("R'")
 
     def B(self):
         self._side_rotation(0, 0)
+        self.history.append("B")
 
     def B2(self):
         self.B()
         self.B()
+        self.history.append("B2")
 
     def Bi(self):
         self._side_rotation(0, 1)
+        self.history.append("B'")
 
     def D(self):
         self._horizontal_rotation(self.n - 1, 1)
+        self.history.append("D")
 
     def D2(self):
         self.D()
         self.D()
+        self.history.append("D2")
 
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
+        self.history.append("D'")
