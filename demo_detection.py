@@ -1,10 +1,14 @@
 import cv2
 import numpy as np
 
+def flip_image(frame):
+    # Lật hình ảnh theo chiều ngang (đổi -1 thành 1 để lật theo chiều dọc)
+    flipped_frame = cv2.flip(frame, 1)
+    return flipped_frame
 
 def get_color_name(hsv_color):
     h, s, v = hsv_color
-    if s<10:
+    if s<50:
         return 'white'
     if h < 6.5 or h>170 :
         return 'red'
@@ -88,7 +92,12 @@ def read_colors_once_using_color_ranges():
                                                 j * square_size + square_size // 4: (j + 1) * square_size - square_size // 4]
 
                     small_square_hsv = cv2.cvtColor(small_square, cv2.COLOR_BGR2HSV)
+                    for x in range(small_square_hsv.shape[0]):
+                        for y in range(small_square_hsv.shape[1]):
+                            if small_square_hsv[x, y, 1] >= 50:  # Kiểm tra giá trị S
+                                small_square_hsv[x, y, 1] = 255  # Gán giá trị S thành 255
                     avg_color = cv2.mean(small_square_hsv)[:3]  # Tính màu trung bình
+                    
 
                     color_name = get_color_name(avg_color)
                     colors.append(color_name)
@@ -99,7 +108,11 @@ def read_colors_once_using_color_ranges():
             colors_read = True  # Đã đọc màu
 
         # Hiển thị khung hình camera đã được cắt và lưới 3x3
-        cv2.imshow('Camera Frame', grid_frame)
+        #cv2.imshow('Camera Frame', grid_frame)
+        # Hiển thị khung hình camera đã được cắt và lưới 3x3 (lật hình ảnh trước khi hiển thị)
+        flipped_grid_frame = flip_image(grid_frame)
+        cv2.imshow('Camera Frame', flipped_grid_frame)
+
 
         if key == ord('q'):
             break
