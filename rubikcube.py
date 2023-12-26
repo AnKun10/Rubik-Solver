@@ -12,6 +12,7 @@ class RubikCube:
         :param history: (list) list of rotation history
         """
         self.history = history
+        self.state = state
         if state:
             self.n = int(sqrt(len(state) / 6))
             self.colors = []
@@ -40,6 +41,7 @@ class RubikCube:
         :return: None
         """
         self.cube = [[[s for c in range(self.n)] for r in range(self.n)] for s in self.colors]
+        self._update_state()
         self.clear_history()
 
     def solved(self):
@@ -85,6 +87,7 @@ class RubikCube:
             a = choice(range(len(actions)))
             r = randint(0, self.n - 1)
             actions[a]()
+        self._update_state()
         self.clear_history()
 
     def clear_history(self):
@@ -101,6 +104,18 @@ class RubikCube:
         """
         for move in self.history:
             print(move, end=" ")
+
+    def _update_state(self):
+        """
+        Update Rubik state
+        :return: None
+        """
+        temp = []
+        for s in self.cube:
+            for r in range(self.n):
+                for c in range(self.n):
+                    temp.append(s[r][c])
+        self.state = "".join(temp)
 
     def _horizontal_rotation(self, row, direction):
         """
@@ -277,11 +292,3 @@ class RubikCube:
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
         self.history.append("D'")
-
-cube = RubikCube(state = "000000000111111111222222222333333333444444444555555555")
-cube.shuffle()
-cube.show()
-cube.U()
-cube.Fi()
-cube.R2()
-cube.show_history()

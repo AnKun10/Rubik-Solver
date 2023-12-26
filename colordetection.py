@@ -1,16 +1,19 @@
 import cv2
 
+
 def write_to_file(scramble_data):
     try:
         with open('scramble.txt', 'w') as file:
             file.write(scramble_data)
     except Exception as e:
         print("Failed to write:", str(e))
-        
+
+
 def flip_image(frame):
     # Flip the image horizontally (change -1 to 1 to flip vertically)
     flipped_frame = cv2.flip(frame, 1)
     return flipped_frame
+
 
 def get_color_name(hsv_color):
     h, s, v = hsv_color
@@ -29,13 +32,13 @@ def get_color_name(hsv_color):
     else:
         return 'unknown'
 
+
 def color_detecting():
-    
     cap = cv2.VideoCapture(0)
     cube_size = 3  # Size of Rubik's cube grid 3x3
     desired_frame_size = 300  # Camera frame size
     colors_list = []  # List to store color data each time 'R' is pressed
-    avg_list = []     # List to store average values each time 'R' is pressed
+    avg_list = []  # List to store average values each time 'R' is pressed
 
     while True:
         ret, frame = cap.read()
@@ -89,13 +92,15 @@ def color_detecting():
         cnt = 1
         key = cv2.waitKey(1)
         if key == ord('r'):
-            
+
             colors = []
             avg = []
             for i in range(cube_size):
                 for j in range(cube_size):
-                    small_square = cropped_frame[i * big_square_size + big_square_size // 4: (i + 1) * big_square_size - big_square_size // 4,
-                                                j * big_square_size + big_square_size // 4: (j + 1) * big_square_size - big_square_size // 4]
+                    small_square = cropped_frame[i * big_square_size + big_square_size // 4: (
+                                                                                                         i + 1) * big_square_size - big_square_size // 4,
+                                   j * big_square_size + big_square_size // 4: (
+                                                                                           j + 1) * big_square_size - big_square_size // 4]
 
                     small_square_hsv = cv2.cvtColor(small_square, cv2.COLOR_BGR2HSV)
                     for x in range(small_square_hsv.shape[0]):
@@ -103,13 +108,13 @@ def color_detecting():
                             if small_square_hsv[x, y, 1] >= 50:  # Check S value
                                 small_square_hsv[x, y, 1] = 255  # Set S value to 255
                     avg_color = cv2.mean(small_square_hsv)[:3]  # Calculate average color
-                    
+
                     color_name = get_color_name(avg_color)
                     colors.append(color_name)
                     avg.append(avg_color)
-                    
+
             colors_list.append(colors.copy())  # Append the color data of a Rubik's face to the total list
-            avg_list.append(avg.copy())        # Append the average values of a Rubik's face to the total list
+            avg_list.append(avg.copy())  # Append the average values of a Rubik's face to the total list
 
             cv2.imshow('Average Colors', grid_frame)
         st = ''
@@ -117,11 +122,12 @@ def color_detecting():
             for color_list in colors_list:
                 for char in color_list:
                     st += char
-            write_to_file(st)    
+            write_to_file(st)
             break
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     color_detecting()
