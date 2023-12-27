@@ -7,6 +7,10 @@ class LayerByLayer(object):
     def __init__(self, cube):
         self.cube = cube
 
+    def solve(self):
+        self.FL()
+        self.SL()
+
     def cross(self):
         down_center = self.cube.cube[5][1][1]
         rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
@@ -18,7 +22,7 @@ class LayerByLayer(object):
         while True:
             if self._validate_cross(side=5):
                 break
-            edge_coordinates = self._find_edge(down_center)
+            edge_coordinates = self._find_edge_FL(down_center)
             goal_coordinate, neighbor_coordinate = edge_coordinates[0], edge_coordinates[1]
             goal_piece, neighbor_piece = down_center, self._coordinate_to_color(neighbor_coordinate)
             if goal_coordinate[0] != 0 and goal_coordinate[0] != 5:
@@ -137,7 +141,7 @@ class LayerByLayer(object):
         c = coord[2]
         return self.cube.cube[s][r][c]
 
-    def _find_edge(self, color):
+    def _find_edge_FL(self, color):
         """
         :param color: edge color to find
         :return: (list) 2 coordinates of edge piece
@@ -176,6 +180,7 @@ class LayerByLayer(object):
         return ans
 
     def FL(self):
+        self.cross()
         down_center = self.cube.cube[5][1][1]
         rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
                     1: [self.cube.L, self.cube.L2, self.cube.Li],
@@ -338,31 +343,31 @@ class LayerByLayer(object):
                     found = True
                     break
         if not found:
+            if self.cube.cube[0][0][0] == color:
+                ans.append([0, 0, 0])
+                found = True
+            elif self.cube.cube[0][0][2] == color:
+                ans.append([0, 0, 2])
+                found = True
+            elif self.cube.cube[0][2][0] == color:
+                ans.append([0, 2, 0])
+                found = True
+            elif self.cube.cube[0][2][2] == color:
+                ans.append([0, 2, 2])
+                found = True
+        if not found:
             if self._coordinate_to_color(neighbor_dict[(5, 0, 0)][0]) != \
                     self.cube.cube[neighbor_dict[(5, 0, 0)][0][0]][1][1]:
                 ans.append([5, 0, 0])
-                found = True
             elif self._coordinate_to_color(neighbor_dict[(5, 0, 2)][0]) != \
                     self.cube.cube[neighbor_dict[(5, 0, 2)][0][0]][1][1]:
                 ans.append([5, 0, 2])
-                found = True
             elif self._coordinate_to_color(neighbor_dict[(5, 2, 0)][0]) != \
                     self.cube.cube[neighbor_dict[(5, 2, 0)][0][0]][1][1]:
                 ans.append([5, 2, 0])
-                found = True
             elif self._coordinate_to_color(neighbor_dict[(5, 2, 2)][0]) != \
                     self.cube.cube[neighbor_dict[(5, 2, 2)][0][0]][1][1]:
                 ans.append([5, 2, 2])
-                found = True
-        if not found:
-            if self.cube.cube[0][0][0] == color:
-                ans.append([0, 0, 0])
-            elif self.cube.cube[0][0][2] == color:
-                ans.append([0, 0, 2])
-            elif self.cube.cube[0][2][0] == color:
-                ans.append([0, 2, 0])
-            elif self.cube.cube[0][2][2] == color:
-                ans.append([0, 2, 2])
 
         ans.append(neighbor_dict[tuple(ans[0])][0])
         ans.append(neighbor_dict[tuple(ans[0])][1])
@@ -401,20 +406,115 @@ class LayerByLayer(object):
         return True
 
     def SL(self):
-        
+        up_center = self.cube.cube[0][1][1]
+        neighbor_dict = {1: [4, 2], 2: [1, 3], 3: [2, 4], 4: [3, 1]}
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        while True:
+            if self._validate_SL():
+                break
+            edge_coordinates = self._find_edge_SL(up_center)
+            edge_coord1, edge_coord2 = edge_coordinates[0], edge_coordinates[1]
+            edge_piece1, edge_piece2 = self._coordinate_to_color(edge_coord1), self._coordinate_to_color(edge_coord2)
+            if edge_coord1[0] == 0:
+                for s in range(1, 5):
+                    if self.cube.cube[s][1][1] == edge_piece2:
+                        rot_num = s - edge_coord2[0]
+                        if rot_num == 1 or rot_num == -3:
+                            self.cube.Ui()
+                        elif rot_num == 2 or rot_num == -2:
+                            self.cube.U2()
+                        elif rot_num == -1 or rot_num == 3:
+                            self.cube.U()
+                        if self.cube.cube[neighbor_dict[s][0]][1][1] == edge_piece1:
+                            lrot_steps = [self.cube.Ui, rot_dict[neighbor_dict[s][0]][2], self.cube.U,
+                                          rot_dict[neighbor_dict[s][0]][0], self.cube.U, rot_dict[s][0], self.cube.Ui,
+                                          rot_dict[s][2]]
+                            for rot in lrot_steps:
+                                rot()
+                        elif self.cube.cube[neighbor_dict[s][1]][1][1] == edge_piece1:
+                            rrot_steps = [self.cube.U, rot_dict[neighbor_dict[s][1]][0], self.cube.Ui,
+                                          rot_dict[neighbor_dict[s][1]][2], self.cube.Ui, rot_dict[s][2], self.cube.U,
+                                          rot_dict[s][0]]
+                            for rot in rrot_steps:
+                                rot()
+                        break
+            else:
+                lrot_steps = [rot_dict[edge_coord2[0]][0], self.cube.U, rot_dict[edge_coord2[0]][2], self.cube.Ui,
+                              rot_dict[edge_coord1[0]][2], self.cube.Ui, rot_dict[edge_coord1[0]][0], self.cube.U]
+                for rot in lrot_steps:
+                    rot()
 
-cube = RubikCube(state="215205401501312522012124014034033343341042531350555442")
-cube.shuffle()
+    def _find_edge_SL(self, avoid_color):
+        """
+        Find the first edge that doesn't have the given color
+        :param avoid_color: color to avoid
+        :return: (list) list of edge coordinates that doesn't have the given color
+        """
+        ans = []
+        neighbor_dict = {(0, 0, 1): [4, 0, 1], (4, 0, 1): [0, 0, 1],
+                         (0, 1, 0): [1, 0, 1], (1, 0, 1): [0, 1, 0],
+                         (0, 2, 1): [2, 0, 1], (2, 0, 1): [0, 2, 1],
+                         (0, 1, 2): [3, 0, 1], (3, 0, 1): [0, 1, 2],
+                         (1, 1, 0): [4, 1, 2], (4, 1, 2): [1, 1, 0],
+                         (1, 1, 2): [2, 1, 0], (2, 1, 0): [1, 1, 2],
+                         (2, 1, 2): [3, 1, 0], (3, 1, 0): [2, 1, 2],
+                         (3, 1, 2): [4, 1, 0], (4, 1, 0): [3, 1, 2],
+                         (5, 0, 1): [2, 2, 1], (2, 2, 1): [5, 0, 1],
+                         (5, 1, 0): [1, 2, 1], (1, 2, 1): [5, 1, 0],
+                         (5, 1, 2): [3, 2, 1], (3, 2, 1): [5, 1, 2],
+                         (5, 2, 1): [4, 2, 1], (4, 2, 1): [5, 2, 1]}
+        found = False
+        if self.cube.cube[0][1][0] != avoid_color and self._coordinate_to_color(
+                neighbor_dict[(0, 1, 0)]) != avoid_color:
+            ans.append([0, 1, 0])
+            ans.append(neighbor_dict[(0, 1, 0)])
+            found = True
+        elif self.cube.cube[0][0][1] != avoid_color and self._coordinate_to_color(
+                neighbor_dict[(0, 0, 1)]) != avoid_color:
+            ans.append([0, 0, 1])
+            ans.append(neighbor_dict[(0, 0, 1)])
+            found = True
+        elif self.cube.cube[0][1][2] != avoid_color and self._coordinate_to_color(
+                neighbor_dict[(0, 1, 2)]) != avoid_color:
+            ans.append([0, 1, 2])
+            ans.append(neighbor_dict[(0, 1, 2)])
+            found = True
+        elif self.cube.cube[0][2][1] != avoid_color and self._coordinate_to_color(
+                neighbor_dict[(0, 2, 1)]) != avoid_color:
+            ans.append([0, 2, 1])
+            ans.append(neighbor_dict[(0, 2, 1)])
+            found = True
+        if not found:
+            for s in range(1, 5):
+                if (self.cube.cube[s][1][0] != self.cube.cube[s][1][1] or self._coordinate_to_color(
+                        neighbor_dict[(s, 1, 0)]) != self.cube.cube[neighbor_dict[(s, 1, 0)][0]][1][1]) and (
+                        self.cube.cube[s][1][0] != avoid_color and self._coordinate_to_color(
+                    neighbor_dict[(s, 1, 0)]) != avoid_color):
+                    ans.append(neighbor_dict[(s, 1, 0)])
+                    ans.append([s, 1, 0])
+                    break
+        return ans
+
+    def _validate_SL(self):
+        for s in range(1, 5):
+            center = self.cube.cube[s][1][1]
+            if self.cube.cube[s][1][0] != center or self.cube.cube[s][1][2] != center:
+                return False
+        return True
+
+
+cube = RubikCube(state="414502430143410240551125320250130133325441501204352532")
 solver = LayerByLayer(cube=cube)
-solver.cross()
-cube.show()
-print("--------------------------------")
-cube.show_history()
-print()
-print("--------------------------------")
-
+print("------------------------------------------------")
 solver.FL()
 cube.show()
-
-print("--------------------------------")
+print("------------------------------------------------")
+solver.SL()
+cube.show()
+print("------------------------------------------------")
 cube.show_history()
