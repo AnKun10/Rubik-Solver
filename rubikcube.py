@@ -248,7 +248,6 @@ class RubikCube:
         else:
             self.history.append("U2")
 
-
     def Ui(self):
         self._horizontal_rotation(0, 1)
         if self.history:
@@ -280,6 +279,7 @@ class RubikCube:
                 self.history.append("L")
         else:
             self.history.append("L")
+
     def L2(self):
         self._vertical_rotation(0, 0)
         self._vertical_rotation(0, 0)
