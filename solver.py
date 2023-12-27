@@ -6,18 +6,6 @@ from rubikcube import RubikCube
 class LayerByLayer(object):
     def __init__(self, cube):
         self.cube = cube
-        self.neighbor_dict = {(0, 0, 1): [4, 0, 1], (4, 0, 1): [0, 0, 1],
-                              (0, 1, 0): [1, 0, 1], (1, 0, 1): [0, 1, 0],
-                              (0, 2, 1): [2, 0, 1], (2, 0, 1): [0, 2, 1],
-                              (0, 1, 2): [3, 0, 1], (3, 0, 1): [0, 1, 2],
-                              (1, 1, 0): [4, 1, 2], (4, 1, 2): [1, 1, 0],
-                              (1, 1, 2): [2, 1, 0], (2, 1, 0): [1, 1, 2],
-                              (2, 1, 2): [3, 1, 0], (3, 1, 0): [2, 1, 2],
-                              (3, 1, 2): [4, 1, 0], (4, 1, 0): [3, 1, 2],
-                              (5, 0, 1): [2, 2, 1], (2, 2, 1): [5, 0, 1],
-                              (5, 1, 0): [1, 2, 1], (1, 2, 1): [5, 1, 0],
-                              (5, 1, 2): [3, 2, 1], (3, 2, 1): [5, 1, 2],
-                              (5, 2, 1): [4, 2, 1], (4, 2, 1): [5, 2, 1]}
 
     def cross(self):
         down_center = self.cube.cube[5][1][1]
@@ -172,11 +160,174 @@ class LayerByLayer(object):
                     break
             if found:
                 break
-        ans.append(self.neighbor_dict[tuple(ans[0])])
+        neighbor_dict = {(0, 0, 1): [4, 0, 1], (4, 0, 1): [0, 0, 1],
+                         (0, 1, 0): [1, 0, 1], (1, 0, 1): [0, 1, 0],
+                         (0, 2, 1): [2, 0, 1], (2, 0, 1): [0, 2, 1],
+                         (0, 1, 2): [3, 0, 1], (3, 0, 1): [0, 1, 2],
+                         (1, 1, 0): [4, 1, 2], (4, 1, 2): [1, 1, 0],
+                         (1, 1, 2): [2, 1, 0], (2, 1, 0): [1, 1, 2],
+                         (2, 1, 2): [3, 1, 0], (3, 1, 0): [2, 1, 2],
+                         (3, 1, 2): [4, 1, 0], (4, 1, 0): [3, 1, 2],
+                         (5, 0, 1): [2, 2, 1], (2, 2, 1): [5, 0, 1],
+                         (5, 1, 0): [1, 2, 1], (1, 2, 1): [5, 1, 0],
+                         (5, 1, 2): [3, 2, 1], (3, 2, 1): [5, 1, 2],
+                         (5, 2, 1): [4, 2, 1], (4, 2, 1): [5, 2, 1]}
+        ans.append(neighbor_dict[tuple(ans[0])])
         return ans
+
+    def FL(self):
+        down_center = self.cube.cube[5][1][1]
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        while True:
+            if self._validate_corners(5):
+                break
+            corner_coordinates = self._find_corner(down_center)
+            goal_coord, neighbor_coord1, neighbor_coord2 = corner_coordinates[0], corner_coordinates[1], \
+                corner_coordinates[2]
+            goal_piece, neighbor_piece1, neighbor_piece2 = down_center, self._coordinate_to_color(
+                neighbor_coord1), self._coordinate_to_color(neighbor_coord2)
+
+            side, row, column = goal_coord[0], goal_coord[1], goal_coord[2]
+            if side == 0:
+                corner_dict = {(1, 2): [0, 2, 0], (2, 3): [0, 2, 2], (3, 4): [0, 0, 2], (1, 4): [0, 0, 0]}
+                centers = []
+                for s in range(1, 5):
+                    if len(centers) == 2:
+                        break
+                    if self.cube.cube[s][1][1] == neighbor_piece1 or self.cube.cube[s][1][1] == neighbor_piece2:
+                        centers.append(s)
+                right_pos = corner_dict[(min(centers), max(centers))]
+                while True:
+                    if right_pos == goal_coord:
+                        break
+                    self.cube.U()
+                continue
+                # if right_pos[2] == 0:
+                #     rot_side = 1
+                #     rot_dir = 2
+                #     if right_pos[1] == 0:
+                #         rot_dir = 0
+                #     rot_dict[rot_side][rot_dir]()
+                #     rot_dict[0][2-rot_dir]()
+                #     rot_dict[rot_side][2-rot_dir]()
+                # elif right_pos[2] == 2:
+                #     rot_side = 3
+                #     rot_dir = 2
+                #     if right_pos[1] == 2:
+                #         rot_dir = 0
+                #     rot_dict[rot_side][rot_dir]()
+                #     rot_dict[0][2 - rot_dir]()
+                #     rot_dict[rot_side][2 - rot_dir]()
+            elif side == 5:
+                if neighbor_piece1 != self.cube.cube[neighbor_coord1[0]][1][1] or neighbor_piece2 != \
+                        self.cube.cube[neighbor_coord2[0]][1][1]:
+                    if goal_coord[2] == 0:
+                        rot_side = 1
+                        rot_dir = 2
+                        if rot_dir[1] == 2:
+                            rot_dir = 0
+                        rot_dict[rot_side][rot_dir]()
+                        rot_dict[0][rot_dir]()
+                        rot_dict[rot_side][2 - rot_dir]()
+                    elif goal_coord[2] == 2:
+                        rot_side = 3
+                        rot_dir = 2
+                        if goal_coord[1] == 0:
+                            rot_dir = 0
+                        rot_dict[rot_side][rot_dir]()
+                        rot_dict[0][rot_dir]()
+                        rot_dict[rot_side][2 - rot_dir]()
+            else:
+                if row == 2:
+                    rot_dir = 2
+                    if column == 0:
+                        rot_dir = 0
+                    rot_dict[side][rot_dir]()
+                    rot_dict[0][rot_dir]()
+                    rot_dict[side][2 - rot_dir]()
+
+
+    def _find_corner(self, color):
+        """
+        :param color: given color to find
+        :return: (list) list of corner coordinates
+        """
+        # ans[0] = coordinate of the first corner found with given color
+        # ans[1], ans[2] = coordinates of 2 neighbor corners
+        ans = []
+        for s in range(6):
+            if self.cube.cube[s][0][0] == color:
+                ans.append([s, 0, 0])
+                break
+            elif self.cube.cube[s][0][2] == color:
+                ans.append([s, 0, 2])
+                break
+            elif self.cube.cube[s][2][0] == color:
+                ans.append([s, 2, 0])
+                break
+            elif self.cube.cube[s][2][2] == color:
+                ans.append([s, 2, 2])
+                break
+        neighbor_dict = {(0, 0, 0): [[1, 0, 0], [4, 0, 2]], (1, 0, 0): [[0, 0, 0], [4, 0, 2]],
+                         (4, 0, 2): [[0, 0, 0], [1, 0, 0]],
+                         (0, 0, 2): [[3, 0, 2], [4, 0, 0]], (3, 0, 2): [[0, 0, 2], [4, 0, 0]],
+                         (4, 0, 0): [[0, 0, 2], [3, 0, 2]],
+                         (0, 2, 0): [[1, 0, 2], [2, 0, 0]], (1, 0, 2): [[0, 2, 0], [2, 0, 0]],
+                         (2, 0, 0): [[0, 2, 0], [1, 0, 2]],
+                         (0, 2, 2): [[2, 0, 2], [3, 0, 0]], (2, 0, 2): [[0, 2, 2], [3, 0, 0]],
+                         (3, 0, 0): [[0, 2, 2], [2, 0, 2]],
+                         (5, 0, 0): [[1, 2, 2], [2, 2, 0]], (1, 2, 2): [[2, 2, 0], [5, 0, 0]],
+                         (2, 2, 0): [[1, 2, 2], [5, 0, 0]],
+                         (5, 0, 2): [[2, 2, 2], [3, 2, 0]], (2, 2, 2): [[3, 2, 0], [5, 0, 2]],
+                         (3, 2, 0): [[2, 2, 2], [5, 0, 2]],
+                         (5, 2, 0): [[1, 2, 0], [4, 2, 2]], (1, 2, 0): [[4, 2, 2], [5, 2, 0]],
+                         (4, 2, 2): [[1, 2, 0], [5, 2, 0]],
+                         (5, 2, 2): [[3, 2, 2], [4, 2, 0]], (3, 2, 2): [[4, 2, 0], [5, 2, 2]],
+                         (4, 2, 0): [[3, 2, 2], [5, 2, 2]]}
+        ans.append(neighbor_dict[tuple(ans[0])][0])
+        ans.append(neighbor_dict[tuple(ans[0])][1])
+        return ans
+
+    def _validate_corners(self, side):
+        validate = True
+        neighbor_dict = {(0, 0, 0): [[1, 0, 0], [4, 0, 2]], (1, 0, 0): [[0, 0, 0], [4, 0, 2]],
+                         (4, 0, 2): [[0, 0, 0], [1, 0, 0]],
+                         (0, 0, 2): [[3, 0, 2], [4, 0, 0]], (3, 0, 2): [[0, 0, 2], [4, 0, 0]],
+                         (4, 0, 0): [[0, 0, 2], [3, 0, 2]],
+                         (0, 2, 0): [[1, 0, 2], [2, 0, 0]], (1, 0, 2): [[0, 2, 0], [2, 0, 0]],
+                         (2, 0, 0): [[0, 2, 0], [1, 0, 2]],
+                         (0, 2, 2): [[2, 0, 2], [3, 0, 0]], (2, 0, 2): [[0, 2, 2], [3, 0, 0]],
+                         (3, 0, 0): [[0, 2, 2], [2, 0, 2]],
+                         (5, 0, 0): [[1, 2, 2], [2, 2, 0]], (1, 2, 2): [[2, 2, 0], [5, 0, 0]],
+                         (2, 2, 0): [[1, 2, 2], [5, 0, 0]],
+                         (5, 0, 2): [[2, 2, 2], [3, 2, 0]], (2, 2, 2): [[3, 2, 0], [5, 0, 2]],
+                         (3, 2, 0): [[2, 2, 2], [5, 0, 2]],
+                         (5, 2, 0): [[1, 2, 0], [4, 2, 2]], (1, 2, 0): [[4, 2, 2], [5, 2, 0]],
+                         (4, 2, 2): [[1, 2, 0], [5, 2, 0]],
+                         (5, 2, 2): [[3, 2, 2], [4, 2, 0]], (3, 2, 2): [[4, 2, 0], [5, 2, 2]],
+                         (4, 2, 0): [[3, 2, 2], [5, 2, 2]]}
+        center = self.cube.cube[side][1][1]
+        if self.cube.cube[side][0][0] != center or self.cube.cube[side][0][2] != center or self.cube.cube[side][2][
+            0] != center or self.cube.cube[side][2][2] != center:
+            return False
+        neighbor_coordinates = [neighbor_dict[(side, 0, 0)], neighbor_dict[(side, 0, 2)], neighbor_dict[(side, 2, 0)],
+                                neighbor_dict[(side, 2, 2)]]
+        for neighbor in neighbor_coordinates:
+            for coord in neighbor:
+                side = coord[0]
+                color = self._coordinate_to_color(coord)
+                if color != self.cube.cube[side][1][1]:
+                    return False
+        return True
 
 
 cube = RubikCube(state="215205401501312522012124014034033343341042531350555442")
+cube.shuffle()
 cube.show()
 print("--------------------------------")
 
