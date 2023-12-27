@@ -217,239 +217,294 @@ class RubikCube:
 
     def U(self):
         self._horizontal_rotation(0, 0)
-        if self.history[-1] == "U2":
-            self.history.pop()
-            self.history.append("U'")
-        elif self.history[-1] == "U'":
-            self.history.pop()
-        elif self.history[-1] == "U":
-            self.history.pop()
-            self.history.append("U2")
+        if self.history:
+            if self.history[-1] == "U2":
+                self.history.pop()
+                self.history.append("U'")
+            elif self.history[-1] == "U'":
+                self.history.pop()
+            elif self.history[-1] == "U":
+                self.history.pop()
+                self.history.append("U2")
+            else:
+                self.history.append("U")
         else:
             self.history.append("U")
 
     def U2(self):
         self._horizontal_rotation(0, 0)
         self._horizontal_rotation(0, 0)
-        if self.history[-1] == "U2":
-            self.history.pop()
-        elif self.history[-1] == "U'":
-            self.history.pop()
-            self.history.append("U")
-        elif self.history[-1] == "U":
-            self.history.pop()
-            self.history.append("U'")
+        if self.history:
+            if self.history[-1] == "U2":
+                self.history.pop()
+            elif self.history[-1] == "U'":
+                self.history.pop()
+                self.history.append("U")
+            elif self.history[-1] == "U":
+                self.history.pop()
+                self.history.append("U'")
+            else:
+                self.history.append("U2")
         else:
             self.history.append("U2")
 
+
     def Ui(self):
         self._horizontal_rotation(0, 1)
-        if self.history[-1] == "U2":
-            self.history.pop()
-            self.history.append("U")
-        elif self.history[-1] == "U'":
-            self.history.pop()
-            self.history.append("U2")
-        elif self.history[-1] == "U":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "U2":
+                self.history.pop()
+                self.history.append("U")
+            elif self.history[-1] == "U'":
+                self.history.pop()
+                self.history.append("U2")
+            elif self.history[-1] == "U":
+                self.history.pop()
+            else:
+                self.history.append("U'")
         else:
             self.history.append("U'")
 
     def L(self):
         self._vertical_rotation(0, 0)
-        if self.history[-1] == "L2":
-            self.history.pop()
-            self.history.append("L'")
-        elif self.history[-1] == "L'":
-            self.history.pop()
-        elif self.history[-1] == "L":
-            self.history.pop()
-            self.history.append("L2")
+        if self.history:
+            if self.history[-1] == "L2":
+                self.history.pop()
+                self.history.append("L'")
+            elif self.history[-1] == "L'":
+                self.history.pop()
+            elif self.history[-1] == "L":
+                self.history.pop()
+                self.history.append("L2")
+            else:
+                self.history.append("L")
         else:
             self.history.append("L")
     def L2(self):
         self._vertical_rotation(0, 0)
         self._vertical_rotation(0, 0)
-        if self.history[-1] == "L2":
-            self.history.pop()
-        elif self.history[-1] == "L'":
-            self.history.pop()
-            self.history.append("L")
-        elif self.history[-1] == "L":
-            self.history.pop()
-            self.history.append("L'")
+        if self.history:
+            if self.history[-1] == "L2":
+                self.history.pop()
+            elif self.history[-1] == "L'":
+                self.history.pop()
+                self.history.append("L")
+            elif self.history[-1] == "L":
+                self.history.pop()
+                self.history.append("L'")
+            else:
+                self.history.append("L2")
         else:
             self.history.append("L2")
 
     def Li(self):
         self._vertical_rotation(0, 1)
-        if self.history[-1] == "L2":
-            self.history.pop()
-            self.history.append("L")
-        elif self.history[-1] == "L'":
-            self.history.pop()
-            self.history.append("L2")
-        elif self.history[-1] == "L":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "L2":
+                self.history.pop()
+                self.history.append("L")
+            elif self.history[-1] == "L'":
+                self.history.pop()
+                self.history.append("L2")
+            elif self.history[-1] == "L":
+                self.history.pop()
+            else:
+                self.history.append("L'")
         else:
             self.history.append("L'")
 
     def F(self):
         self._side_rotation(self.n - 1, 1)
-        if self.history[-1] == "F2":
-            self.history.pop()
-            self.history.append("F'")
-        elif self.history[-1] == "F'":
-            self.history.pop()
-        elif self.history[-1] == "F":
-            self.history.pop()
-            self.history.append("F2")
+        if self.history:
+            if self.history[-1] == "F2":
+                self.history.pop()
+                self.history.append("F'")
+            elif self.history[-1] == "F'":
+                self.history.pop()
+            elif self.history[-1] == "F":
+                self.history.pop()
+                self.history.append("F2")
+            else:
+                self.history.append("F")
         else:
             self.history.append("F")
 
     def F2(self):
         self._side_rotation(self.n - 1, 1)
         self._side_rotation(self.n - 1, 1)
-        if self.history[-1] == "F2":
-            self.history.pop()
-        elif self.history[-1] == "F'":
-            self.history.pop()
-            self.history.append("F")
-        elif self.history[-1] == "F":
-            self.history.pop()
-            self.history.append("F'")
+        if self.history:
+            if self.history[-1] == "F2":
+                self.history.pop()
+            elif self.history[-1] == "F'":
+                self.history.pop()
+                self.history.append("F")
+            elif self.history[-1] == "F":
+                self.history.pop()
+                self.history.append("F'")
+            else:
+                self.history.append("F2")
         else:
             self.history.append("F2")
 
     def Fi(self):
         self._side_rotation(self.n - 1, 0)
-        if self.history[-1] == "F2":
-            self.history.pop()
-            self.history.append("F")
-        elif self.history[-1] == "F'":
-            self.history.pop()
-            self.history.append("F2")
-        elif self.history[-1] == "F":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "F2":
+                self.history.pop()
+                self.history.append("F")
+            elif self.history[-1] == "F'":
+                self.history.pop()
+                self.history.append("F2")
+            elif self.history[-1] == "F":
+                self.history.pop()
+            else:
+                self.history.append("F'")
         else:
             self.history.append("F'")
 
     def R(self):
         self._vertical_rotation(self.n - 1, 1)
-        if self.history[-1] == "R2":
-            self.history.pop()
-            self.history.append("R'")
-        elif self.history[-1] == "R'":
-            self.history.pop()
-        elif self.history[-1] == "R":
-            self.history.pop()
-            self.history.append("R2")
+        if self.history:
+            if self.history[-1] == "R2":
+                self.history.pop()
+                self.history.append("R'")
+            elif self.history[-1] == "R'":
+                self.history.pop()
+            elif self.history[-1] == "R":
+                self.history.pop()
+                self.history.append("R2")
+            else:
+                self.history.append("R")
         else:
             self.history.append("R")
 
     def R2(self):
         self._vertical_rotation(self.n - 1, 1)
         self._vertical_rotation(self.n - 1, 1)
-        if self.history[-1] == "R2":
-            self.history.pop()
-        elif self.history[-1] == "R'":
-            self.history.pop()
-            self.history.append("R")
-        elif self.history[-1] == "R":
-            self.history.pop()
-            self.history.append("R'")
+        if self.history:
+            if self.history[-1] == "R2":
+                self.history.pop()
+            elif self.history[-1] == "R'":
+                self.history.pop()
+                self.history.append("R")
+            elif self.history[-1] == "R":
+                self.history.pop()
+                self.history.append("R'")
+            else:
+                self.history.append("R2")
         else:
             self.history.append("R2")
 
     def Ri(self):
         self._vertical_rotation(self.n - 1, 0)
-        if self.history[-1] == "R2":
-            self.history.pop()
-            self.history.append("R")
-        elif self.history[-1] == "R'":
-            self.history.pop()
-            self.history.append("R2")
-        elif self.history[-1] == "R":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "R2":
+                self.history.pop()
+                self.history.append("R")
+            elif self.history[-1] == "R'":
+                self.history.pop()
+                self.history.append("R2")
+            elif self.history[-1] == "R":
+                self.history.pop()
+            else:
+                self.history.append("R'")
         else:
             self.history.append("R'")
 
     def B(self):
         self._side_rotation(0, 0)
-        if self.history[-1] == "B2":
-            self.history.pop()
-            self.history.append("B'")
-        elif self.history[-1] == "B'":
-            self.history.pop()
-        elif self.history[-1] == "B":
-            self.history.pop()
-            self.history.append("B2")
+        if self.history:
+            if self.history[-1] == "B2":
+                self.history.pop()
+                self.history.append("B'")
+            elif self.history[-1] == "B'":
+                self.history.pop()
+            elif self.history[-1] == "B":
+                self.history.pop()
+                self.history.append("B2")
+            else:
+                self.history.append("B")
         else:
             self.history.append("B")
 
     def B2(self):
         self._side_rotation(0, 0)
         self._side_rotation(0, 0)
-        if self.history[-1] == "B2":
-            self.history.pop()
-        elif self.history[-1] == "B'":
-            self.history.pop()
-            self.history.append("B")
-        elif self.history[-1] == "B":
-            self.history.pop()
-            self.history.append("B'")
+        if self.history:
+            if self.history[-1] == "B2":
+                self.history.pop()
+            elif self.history[-1] == "B'":
+                self.history.pop()
+                self.history.append("B")
+            elif self.history[-1] == "B":
+                self.history.pop()
+                self.history.append("B'")
+            else:
+                self.history.append("B2")
         else:
             self.history.append("B2")
 
     def Bi(self):
         self._side_rotation(0, 1)
-        if self.history[-1] == "B2":
-            self.history.pop()
-            self.history.append("B")
-        elif self.history[-1] == "B'":
-            self.history.pop()
-            self.history.append("B2")
-        elif self.history[-1] == "B":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "B2":
+                self.history.pop()
+                self.history.append("B")
+            elif self.history[-1] == "B'":
+                self.history.pop()
+                self.history.append("B2")
+            elif self.history[-1] == "B":
+                self.history.pop()
+            else:
+                self.history.append("B'")
         else:
             self.history.append("B'")
 
     def D(self):
         self._horizontal_rotation(self.n - 1, 1)
-        if self.history[-1] == "D2":
-            self.history.pop()
-            self.history.append("D'")
-        elif self.history[-1] == "D'":
-            self.history.pop()
-        elif self.history[-1] == "D":
-            self.history.pop()
-            self.history.append("D2")
+        if self.history:
+            if self.history[-1] == "D2":
+                self.history.pop()
+                self.history.append("D'")
+            elif self.history[-1] == "D'":
+                self.history.pop()
+            elif self.history[-1] == "D":
+                self.history.pop()
+                self.history.append("D2")
+            else:
+                self.history.append("D")
         else:
             self.history.append("D")
 
     def D2(self):
         self._horizontal_rotation(self.n - 1, 1)
         self._horizontal_rotation(self.n - 1, 1)
-        if self.history[-1] == "D2":
-            self.history.pop()
-        elif self.history[-1] == "D'":
-            self.history.pop()
-            self.history.append("D")
-        elif self.history[-1] == "D":
-            self.history.pop()
-            self.history.append("D'")
+        if self.history:
+            if self.history[-1] == "D2":
+                self.history.pop()
+            elif self.history[-1] == "D'":
+                self.history.pop()
+                self.history.append("D")
+            elif self.history[-1] == "D":
+                self.history.pop()
+                self.history.append("D'")
+            else:
+                self.history.append("D2")
         else:
             self.history.append("D2")
 
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
-        if self.history[-1] == "D2":
-            self.history.pop()
-            self.history.append("D")
-        elif self.history[-1] == "D'":
-            self.history.pop()
-            self.history.append("D2")
-        elif self.history[-1] == "D":
-            self.history.pop()
+        if self.history:
+            if self.history[-1] == "D2":
+                self.history.pop()
+                self.history.append("D")
+            elif self.history[-1] == "D'":
+                self.history.pop()
+                self.history.append("D2")
+            elif self.history[-1] == "D":
+                self.history.pop()
+            else:
+                self.history.append("D'")
         else:
             self.history.append("D'")
