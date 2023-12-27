@@ -11,7 +11,7 @@ class LayerByLayer(object):
         self.FL()
         self.SL()
 
-    def cross(self):
+    def cross_FL(self):
         down_center = self.cube.cube[5][1][1]
         rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
                     1: [self.cube.L, self.cube.L2, self.cube.Li],
@@ -180,7 +180,7 @@ class LayerByLayer(object):
         return ans
 
     def FL(self):
-        self.cross()
+        self.cross_FL()
         down_center = self.cube.cube[5][1][1]
         rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
                     1: [self.cube.L, self.cube.L2, self.cube.Li],
@@ -215,6 +215,14 @@ class LayerByLayer(object):
                                 self.cube.Ui()
                             elif neighbor_coord1[0] > neighbor_coord2[0]:
                                 self.cube.U()
+                        elif neighbor_coord1[0] in centers and neighbor_coord2[0] not in centers:
+                            if neighbor_coord1[0] == 1 and neighbor_coord2[0] == 4:
+                                self.cube.Ui()
+                            elif (neighbor_coord1[0] == 4 and neighbor_coord2[0] == 1) or (
+                                    neighbor_coord1[0] < neighbor_coord2[0]):
+                                self.cube.U()
+                            elif neighbor_coord1[0] > neighbor_coord2[0]:
+                                self.cube.Ui()
                         break
                 right_pos = corner_dict[(min(centers), max(centers))]
                 if right_pos[2] == 0:
@@ -507,14 +515,106 @@ class LayerByLayer(object):
                 return False
         return True
 
+    def cross_TL(self):
+        rneighbor_dict = {1: 2, 2: 3, 3: 4, 4: 1}
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        rot_side = self._check_shape_TL(0)
+        if rot_side == -1:
+            return
+        rot_steps = [rot_dict[rot_side][0], rot_dict[rneighbor_dict[rot_side]][0], self.cube.U,
+                     rot_dict[rneighbor_dict[rot_side]][2], self.cube.Ui, rot_dict[rot_side][2]]
+        while True:
+            if self._check_shape_TL() == -1:
+                break
+            for rot in rot_steps:
+                rot()
+        while True:
+            if self._swap_edges_TL():
+                break
 
-cube = RubikCube(state="414502430143410240551125320250130133325441501204352532")
+    def _check_shape_TL(self, side=0):
+        center = self.cube.cube[side][1][1]
+        same_color_pieces = [(side, 1, 1)]
+        # key = coordinate of an edge piece, value = return side to rotate
+        return_side_dict = {(0, 0, 1): 4, (0, 1, 0): 1, (0, 1, 2): 3, (0, 2, 1): 2}
+        edge_pieces = [(side, 0, 1), (side, 1, 0), (side, 1, 2), (side, 2, 1)]
+        for piece in edge_pieces:
+            if self._coordinate_to_color(piece) == center:
+                same_color_pieces.append(piece)
+
+        # dot shape = return 2, reverse L (stick) shape = return side that we can see reverse L (stick) shape, cross = return 2
+        if len(same_color_pieces) == 1 or len(same_color_pieces) == 2:
+            return 2
+        elif len(same_color_pieces) == 5:
+            return -1
+        elif len(same_color_pieces) == 4:
+            for piece in edge_pieces:
+                if piece not in same_color_pieces:
+                    return return_side_dict[piece]
+        elif len(same_color_pieces) == 3:
+            if same_color_pieces[1][1] == same_color_pieces[2][1] or same_color_pieces[1][2] == same_color_pieces[2][2]:
+                for piece in edge_pieces:
+                    if piece not in same_color_pieces:
+                        return return_side_dict[piece]
+            else:
+                return_side_dict_new = {((0, 0, 1), (0, 1, 0)): 2, ((0, 1, 0), (0, 2, 1)): 3, ((0, 1, 2), (0, 2, 1)): 4,
+                                        ((0, 0, 1), (0, 1, 2)): 1}
+                return return_side_dict_new[tuple(same_color_pieces[1::])]
+
+    def _swap_edges_TL(self):
+        swap_dict = {(1, 2): 2, (2, 3): 3, (3, 4): 4, (1, 4): 1}
+        rneighbor_dict = {1: 2, 2: 3, 3: 4, 4: 1}
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        right_pos_sides = []
+        rot_side = -1
+        while True:
+            right_pos_counter = 0
+            temp = []
+            for s in range(1, 5):
+                if self.cube.cube[s][1][1] == self.cube.cube[s][0][1]:
+                    right_pos_counter += 1
+                    temp.append(s)
+            if right_pos_counter == 4:
+                return True
+            elif right_pos_counter >= 2:
+                right_pos_sides = temp
+                right_pos_sides.sort()
+                break
+            self.cube.U()
+        if right_pos_sides == [1, 3] or right_pos_sides == [2, 4]:
+            rot_side = right_pos_sides[0]
+        else:
+            temp = []
+            for i in range(1,5):
+                if i not in right_pos_sides:
+                    temp.append(i)
+                if len(temp) == 2:
+                    break
+            rot_side = swap_dict[tuple(temp)]
+        rot_steps = [rot_dict[rneighbor_dict[rot_side]][0], self.cube.U, rot_dict[rneighbor_dict[rot_side]][2], self.cube.U, rot_dict[rneighbor_dict[rot_side]][0], self.cube.U2, rot_dict[rneighbor_dict[rot_side]][2], self.cube.U]
+        for rot in rot_steps:
+            rot()
+        return False
+
+
+cube = RubikCube(state="431200225503214311053321452235034141223141544030555004")
+cube.shuffle()
 solver = LayerByLayer(cube=cube)
-print("------------------------------------------------")
-solver.FL()
+solver.solve()
 cube.show()
+cube.show_history()
+print()
 print("------------------------------------------------")
-solver.SL()
+solver.cross_TL()
 cube.show()
-print("------------------------------------------------")
 cube.show_history()
