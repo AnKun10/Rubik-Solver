@@ -8,9 +8,14 @@ class LayerByLayer(object):
         self.cube = cube
 
     def solve(self):
+        if self.cube.solved():
+            print("CUBE HAS ALREADY IN SOLVED STATE")
+            return
         self.FL()
         self.SL()
         self.TL()
+        print("SOLUTION:")
+        self.cube.show_history()
 
     def cross_FL(self):
         down_center = self.cube.cube[5][1][1]

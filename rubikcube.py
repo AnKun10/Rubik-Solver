@@ -23,10 +23,28 @@ class RubikCube:
                     break
             self.cube = [[[c for c in state[r + s:r + s + self.n]] for r in range(0, self.n ** 2, self.n)] for s in
                          range(0, len(state), 9)]
+            if not self._validate_state():
+                print("--------------INVALID INPUT STATE--------------")
+                print("------------------RESET CUBE------------------")
+                self.reset()
         else:
             self.n = n
             self.colors = colors
             self.reset()
+
+    def _validate_state(self):
+        if len(self.colors) != 6:
+            return False
+        color_pieces_count = [0 for _ in self.colors]
+        for s in self.cube:
+            for r in s:
+                for c in r:
+                    for i in range(len(self.colors)):
+                        if c == self.colors[i]:
+                            color_pieces_count[i] += 1
+        if color_pieces_count.count(9) != 6:
+            return False
+        return True
 
     def __str__(self):
         """
