@@ -729,20 +729,3 @@ class LayerByLayer(object):
     def TL(self):
         self.cross_TL()
         self.corner_TL()
-
-
-cube = RubikCube(state="224104031102111111300222222400333333300444444555555555")
-cube.shuffle()
-solver = LayerByLayer(cube=cube)
-cube.show()
-print("------------------------------------------------")
-solver.solve()
-cube.show()
-print(cube.history)
-print()
-print("------------------------------------------------")
-
-# solver.cross_TL()
-# solver.corner_TL()
-# cube.show()
-# cube.show_history()
