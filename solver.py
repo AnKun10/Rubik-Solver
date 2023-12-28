@@ -10,6 +10,7 @@ class LayerByLayer(object):
     def solve(self):
         self.FL()
         self.SL()
+        self.TL()
 
     def cross_FL(self):
         down_center = self.cube.cube[5][1][1]
@@ -523,14 +524,12 @@ class LayerByLayer(object):
                     3: [self.cube.R, self.cube.R2, self.cube.Ri],
                     4: [self.cube.B, self.cube.B2, self.cube.Bi],
                     5: [self.cube.D, self.cube.D2, self.cube.Di]}
-        rot_side = self._check_shape_TL(0)
-        if rot_side == -1:
-            return
-        rot_steps = [rot_dict[rot_side][0], rot_dict[rneighbor_dict[rot_side]][0], self.cube.U,
-                     rot_dict[rneighbor_dict[rot_side]][2], self.cube.Ui, rot_dict[rot_side][2]]
         while True:
-            if self._check_shape_TL() == -1:
+            rot_side = self._check_shape_TL(0)
+            if rot_side == -1:
                 break
+            rot_steps = [rot_dict[rot_side][0], rot_dict[rneighbor_dict[rot_side]][0], self.cube.U,
+                         rot_dict[rneighbor_dict[rot_side]][2], self.cube.Ui, rot_dict[rot_side][2]]
             for rot in rot_steps:
                 rot()
         while True:
@@ -595,26 +594,155 @@ class LayerByLayer(object):
             rot_side = right_pos_sides[0]
         else:
             temp = []
-            for i in range(1,5):
+            for i in range(1, 5):
                 if i not in right_pos_sides:
                     temp.append(i)
                 if len(temp) == 2:
                     break
             rot_side = swap_dict[tuple(temp)]
-        rot_steps = [rot_dict[rneighbor_dict[rot_side]][0], self.cube.U, rot_dict[rneighbor_dict[rot_side]][2], self.cube.U, rot_dict[rneighbor_dict[rot_side]][0], self.cube.U2, rot_dict[rneighbor_dict[rot_side]][2], self.cube.U]
+        rot_steps = [rot_dict[rneighbor_dict[rot_side]][0], self.cube.U, rot_dict[rneighbor_dict[rot_side]][2],
+                     self.cube.U, rot_dict[rneighbor_dict[rot_side]][0], self.cube.U2,
+                     rot_dict[rneighbor_dict[rot_side]][2], self.cube.U]
         for rot in rot_steps:
             rot()
         return False
 
+    def corner_TL(self):
+        neighbor_dict = {1: [4, 2], 2: [1, 3], 3: [2, 4], 4: [3, 1]}
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        while True:
+            right_pos_corners = self._check_right_pos_corners_TL(0)
+            if len(right_pos_corners) == 4:
+                break
+            chosen_corner_coords = right_pos_corners[0]
+            chosen_side = -1
+            if neighbor_dict[chosen_corner_coords[1][0]][1] == chosen_corner_coords[2][0]:
+                chosen_side = chosen_corner_coords[1][0]
+            elif neighbor_dict[chosen_corner_coords[2][0]][1] == chosen_corner_coords[1][0]:
+                chosen_side = chosen_corner_coords[2][0]
+            rot_steps = [self.cube.U, rot_dict[neighbor_dict[chosen_side][1]][0], self.cube.Ui,
+                         rot_dict[neighbor_dict[chosen_side][0]][2], self.cube.U,
+                         rot_dict[neighbor_dict[chosen_side][1]][2], self.cube.Ui,
+                         rot_dict[neighbor_dict[chosen_side][0]][0]]
+            for rot in rot_steps:
+                rot()
+        self._orient_corners_TL(0)
 
-cube = RubikCube(state="431200225503214311053321452235034141223141544030555004")
+    def _orient_corners_TL(self, side=0):
+        center = self.cube.cube[side][1][1]
+        corner_coords = [(side, 0, 0), (side, 0, 2), (side, 2, 0), (side, 2, 2)]
+        opposite_side_dict = {0: 5, 1: 3, 2: 4, 3: 1, 4: 2, 5: 0}
+        neighbor_dict = {(0, 0, 0): [[1, 0, 0], [4, 0, 2]], (1, 0, 0): [[0, 0, 0], [4, 0, 2]],
+                         (4, 0, 2): [[0, 0, 0], [1, 0, 0]],
+                         (0, 0, 2): [[3, 0, 2], [4, 0, 0]], (3, 0, 2): [[0, 0, 2], [4, 0, 0]],
+                         (4, 0, 0): [[0, 0, 2], [3, 0, 2]],
+                         (0, 2, 0): [[1, 0, 2], [2, 0, 0]], (1, 0, 2): [[0, 2, 0], [2, 0, 0]],
+                         (2, 0, 0): [[0, 2, 0], [1, 0, 2]],
+                         (0, 2, 2): [[2, 0, 2], [3, 0, 0]], (2, 0, 2): [[0, 2, 2], [3, 0, 0]],
+                         (3, 0, 0): [[0, 2, 2], [2, 0, 2]],
+                         (5, 0, 0): [[1, 2, 2], [2, 2, 0]], (1, 2, 2): [[2, 2, 0], [5, 0, 0]],
+                         (2, 2, 0): [[1, 2, 2], [5, 0, 0]],
+                         (5, 0, 2): [[2, 2, 2], [3, 2, 0]], (2, 2, 2): [[3, 2, 0], [5, 0, 2]],
+                         (3, 2, 0): [[2, 2, 2], [5, 0, 2]],
+                         (5, 2, 0): [[1, 2, 0], [4, 2, 2]], (1, 2, 0): [[4, 2, 2], [5, 2, 0]],
+                         (4, 2, 2): [[1, 2, 0], [5, 2, 0]],
+                         (5, 2, 2): [[3, 2, 2], [4, 2, 0]], (3, 2, 2): [[4, 2, 0], [5, 2, 2]],
+                         (4, 2, 0): [[3, 2, 2], [5, 2, 2]]}
+        rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                    1: [self.cube.L, self.cube.L2, self.cube.Li],
+                    2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                    3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                    4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                    5: [self.cube.D, self.cube.D2, self.cube.Di]}
+        rot_side = -1
+        validate_coord = corner_coords[0]
+        for coord in corner_coords:
+            piece = self._coordinate_to_color(coord)
+            if piece != center:
+                validate_coord = coord
+                neigbor_coords = neighbor_dict[coord]
+                if neigbor_coords[0][2] == 0:
+                    rot_side = neigbor_coords[0][0]
+                elif neigbor_coords[1][2] == 0:
+                    rot_side = neigbor_coords[1][0]
+                break
+        rot_steps = [rot_dict[rot_side][2], rot_dict[opposite_side_dict[side]][2], rot_dict[rot_side][0],
+                     rot_dict[opposite_side_dict[side]][0]]
+        right_corner_counter = 0
+        while True:
+            if right_corner_counter == 4:
+                break
+            if self._coordinate_to_color(validate_coord) == center:
+                right_corner_counter += 1
+                rot_dict[side][0]()
+                continue
+            for rot in rot_steps:
+                rot()
+        while True:
+            if self.cube.cube[rot_side][1][1] != self.cube.cube[rot_side][0][0]:
+                rot_dict[side][0]()
+            else:
+                break
+
+    def _check_right_pos_corners_TL(self, side=0):
+        right_pos_corners = []
+        neighbor_dict = {(0, 0, 0): [[4, 0, 2], [1, 0, 0]], (1, 0, 0): [[0, 0, 0], [4, 0, 2]],
+                         (4, 0, 2): [[0, 0, 0], [1, 0, 0]],
+                         (0, 0, 2): [[3, 0, 2], [4, 0, 0]], (3, 0, 2): [[0, 0, 2], [4, 0, 0]],
+                         (4, 0, 0): [[0, 0, 2], [3, 0, 2]],
+                         (0, 2, 0): [[1, 0, 2], [2, 0, 0]], (1, 0, 2): [[0, 2, 0], [2, 0, 0]],
+                         (2, 0, 0): [[0, 2, 0], [1, 0, 2]],
+                         (0, 2, 2): [[2, 0, 2], [3, 0, 0]], (2, 0, 2): [[0, 2, 2], [3, 0, 0]],
+                         (3, 0, 0): [[0, 2, 2], [2, 0, 2]],
+                         (5, 0, 0): [[1, 2, 2], [2, 2, 0]], (1, 2, 2): [[2, 2, 0], [5, 0, 0]],
+                         (2, 2, 0): [[1, 2, 2], [5, 0, 0]],
+                         (5, 0, 2): [[2, 2, 2], [3, 2, 0]], (2, 2, 2): [[3, 2, 0], [5, 0, 2]],
+                         (3, 2, 0): [[2, 2, 2], [5, 0, 2]],
+                         (5, 2, 0): [[1, 2, 0], [4, 2, 2]], (1, 2, 0): [[4, 2, 2], [5, 2, 0]],
+                         (4, 2, 2): [[1, 2, 0], [5, 2, 0]],
+                         (5, 2, 2): [[3, 2, 2], [4, 2, 0]], (3, 2, 2): [[4, 2, 0], [5, 2, 2]],
+                         (4, 2, 0): [[3, 2, 2], [5, 2, 2]]}
+        # color of 3 pieces of corners
+        for r in range(0, 3, 2):
+            for c in range(0, 3, 2):
+                neighbor_coord1, neighbor_coord2 = neighbor_dict[(side, r, c)][0], neighbor_dict[(side, r, c)][1]
+                validate1 = [self.cube.cube[side][r][c], self._coordinate_to_color(neighbor_coord1),
+                             self._coordinate_to_color(neighbor_coord2)]
+                validate2 = [self.cube.cube[side][1][1], self.cube.cube[neighbor_coord1[0]][1][1],
+                             self.cube.cube[neighbor_coord2[0]][1][1]]
+                right_pos = True
+                for piece in validate1:
+                    if piece not in validate2:
+                        right_pos = False
+                        break
+                if right_pos:
+                    right_pos_corners.append([[side, r, c], neighbor_coord1, neighbor_coord2])
+        if len(right_pos_corners) == 0:
+            right_pos_corners.append([[side, 2, 2], neighbor_dict[(side, 2, 2)][0], neighbor_dict[(side, 2, 2)][1]])
+        return right_pos_corners
+
+    def TL(self):
+        self.cross_TL()
+        self.corner_TL()
+
+
+cube = RubikCube(state="224104031102111111300222222400333333300444444555555555")
 cube.shuffle()
 solver = LayerByLayer(cube=cube)
+cube.show()
+print("------------------------------------------------")
 solver.solve()
 cube.show()
-cube.show_history()
+print(cube.history)
 print()
 print("------------------------------------------------")
-solver.cross_TL()
-cube.show()
-cube.show_history()
+
+# solver.cross_TL()
+# solver.corner_TL()
+# cube.show()
+# cube.show_history()
