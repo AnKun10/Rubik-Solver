@@ -1,6 +1,6 @@
 from random import choice
 from copy import deepcopy
-from rubikcube import RubikCube
+from rubikcube import RubikCube, BFSBBCube
 
 
 class LayerByLayer(object):
@@ -734,3 +734,104 @@ class LayerByLayer(object):
     def TL(self):
         self.cross_TL()
         self.corner_TL()
+
+
+class BFSBB(object):
+    def __init__(self, cube):
+        self.cube = cube
+        # key = last rot_move, value = heuristic next rot_side
+        self.next_rot_side_dict = {"U": [1, 2, 3, 4, 5], "U2": [1, 2, 3, 4, 5], "U'": [1, 2, 3, 4, 5],
+                                   "L": [0, 2, 3, 4, 5], "L2": [0, 2, 3, 4, 5], "L'": [0, 2, 3, 4, 5],
+                                   "F": [0, 1, 3, 4, 5], "F2": [0, 1, 3, 4, 5], "F'": [0, 1, 3, 4, 5],
+                                   "R": [0, 1, 2, 4, 5], "R2": [0, 1, 2, 4, 5], "R'": [0, 1, 2, 4, 5],
+                                   "B": [0, 1, 2, 3, 5], "B2": [0, 1, 2, 3, 5], "B'": [0, 1, 2, 3, 5],
+                                   "D": [0, 1, 2, 3, 4], "D2": [0, 1, 2, 3, 4], "D'": [0, 1, 2, 3, 4]}
+        # key = rot_side, value = possible rot_direction on that side
+        self.rot_dict = {0: [self.cube.U, self.cube.U2, self.cube.Ui],
+                         1: [self.cube.L, self.cube.L2, self.cube.Li],
+                         2: [self.cube.F, self.cube.F2, self.cube.Fi],
+                         3: [self.cube.R, self.cube.R2, self.cube.Ri],
+                         4: [self.cube.B, self.cube.B2, self.cube.Bi],
+                         5: [self.cube.D, self.cube.D2, self.cube.Di]}
+
+        self.notion_to_rotation = {"U": self.cube.U, "U2": self.cube.U2, "U'": self.cube.Ui,
+                                   "L": self.cube.L, "L2": self.cube.L2, "L'": self.cube.Li,
+                                   "F": self.cube.F, "F2": self.cube.F2, "F'": self.cube.Fi,
+                                   "R": self.cube.R, "R2": self.cube.R2, "R'": self.cube.Ri,
+                                   "B": self.cube.B, "B2": self.cube.B2, "B'": self.cube.Bi,
+                                   "D": self.cube.D, "D2": self.cube.D2, "D'": self.cube.Di}
+
+    def _cal_g_cost(self, cur_cube):
+        cost = 0
+        for s in range(6):
+            center = cur_cube[s][1][1]
+            for r in range(len(cur_cube[s])):
+                for c in range(len(cur_cube[s])):
+                    if cur_cube[s][r][c] != center:
+                        cost += 1
+        return cost
+
+    def _cal_h_cost(self, history):
+        return len(history)
+
+    def _get_cur_level_nodes(self, node_queue, level):
+        """
+        Get a list of all nodes in the given level and get the index of the next process node (last node in this list).
+        :param node_queue: (list) contain all processing nodes
+        :param level: (int) node's level to get from node_queue
+        :return: (list) contains index of all nodes with given level in node_queue
+        """
+        cur_level_indexs = []
+        for i in range(len(node_queue)):
+            if node_queue[i][0] == level:
+                cur_level_indexs.append(i)
+        return cur_level_indexs
+
+    def solve(self, node_queue=[]):
+        """
+        :param node_queue: (list) contains all processing nodes
+        :return: (list) Solution steps
+        """
+        # cur_node[0] = current cube matrix; cur_node[1] = list of path moves; cur_node[2] = f(current node)
+        if node_queue:
+            cur_node = node_queue.pop()
+            rot_sides = self.next_rot_side_dict[cur_node[1][len(cur_node[1]) - 1]]
+
+            # Reach solved state
+            if self._cal_g_cost(cur_node[0]) == 0:
+                for rot in cur_node[1]:
+                    self.notion_to_rotation[rot](self.cube.cube, self.cube.history)
+                return cur_node[1]
+
+            for i in range(3):
+                for s in rot_sides:
+                    cur_cube, history = deepcopy(cur_node[0]), deepcopy(cur_node[1])
+                    self.rot_dict[s][i](cube=cur_cube, history=history)
+                    next_node = [cur_cube, history,
+                                 self._cal_g_cost(cur_cube) + self._cal_h_cost(history)]
+                    node_queue.append(next_node)
+                    # print(f"[{next_node[0], next_node[2], next_node[3]}]")
+
+        else:
+            cur_node = [self.cube.cube, [], self._cal_g_cost(self.cube.cube)]
+            rot_sides = range(6)
+
+            # Reach solved state
+            if self._cal_g_cost(cur_node[0]) == 0:
+                for rot in cur_node[1]:
+                    self.notion_to_rotation[rot](self.cube.cube, self.cube.history)
+                return cur_node[1]
+
+            # Generate next level nodes
+            for i in range(3):
+                for s in rot_sides:
+                    cur_cube, history = deepcopy(cur_node[0]), deepcopy(cur_node[1])
+                    self.rot_dict[s][i](cube=cur_cube, history=history)
+                    next_node = [cur_cube, history,
+                                 self._cal_g_cost(cur_cube) + self._cal_h_cost(history)]
+                    node_queue.append(next_node)
+                    # print(f"[{next_node[0], next_node[2], next_node[3]}]")
+        try:
+            return self.solve(node_queue=sorted(node_queue, key=lambda x: x[2], reverse=True))
+        except RecursionError:
+            print("Maximum recursion depth exceeded.")
