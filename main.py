@@ -31,6 +31,7 @@ def main():
             print("SOLUTION: ", end="")
             for move in solution:
                 print(move, end=" ")
+            break
         elif solver_choice == 2:
             cube = BFSBBCube(state=state)
             solver = BFSBB(cube=cube)
@@ -38,9 +39,11 @@ def main():
             print("SOLUTION: ", end="")
             for move in solution:
                 print(move, end=" ")
+            break
         elif solver_choice == 3:
             solver = Kociemba(state=state)
             solver.solve()
+            break
         elif solver_choice == 0:
             break
         else:
