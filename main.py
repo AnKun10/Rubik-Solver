@@ -4,6 +4,16 @@ from colordetection import ColorDetector
 from copy import deepcopy
 
 
+def show_options():
+    print("=============================== RUBIK CUBE SOLVER ===============================")
+    print("1, LAYER BY LAYER.")
+    print("2, BFS & BB.")
+    print("3, KOCIEMBA.")
+    print("4, KORF.")
+    print("0, QUIT.")
+    print("=================================================================================")
+
+
 def main():
     detector = ColorDetector()
     detector.color_detecting()
@@ -13,15 +23,9 @@ def main():
     cube.show()
     solution = []
 
+    show_options()
     while True:
         solver_choice = -1
-        print("=============================== RUBIK CUBE SOLVER ===============================")
-        print("1, LAYER BY LAYER.")
-        print("2, BFS & BB.")
-        print("3, KOCIEMBA.")
-        print("4, KORF.")
-        print("0, QUIT.")
-        print("=================================================================================")
         try:
             solver_choice = int(input("CHOOSE A SOLVER (INT): "))
         except ValueError:
