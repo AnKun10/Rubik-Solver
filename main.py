@@ -57,7 +57,7 @@ def main():
                 print(move, end=" ")
         elif solver_choice == 3:
             temp_cube = BFSBBCube(state=state)
-            solver = BFSBB(cube=cube)
+            solver = BFSBB(cube=temp_cube)
             solution = solver.solve()
             print("SOLUTION: ", end="")
             for move in solution:
