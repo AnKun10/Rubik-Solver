@@ -151,22 +151,6 @@ class LayerByLayer(object):
         """
         # ans[0] = coordinate of given color edge piece; ans[1] = coordinate of neighbor edge piece
         ans = []
-        found = False
-        for s in range(6):
-            for r in range(3):
-                if self.cube.cube[s][r][1] == color and (r == 0 or r == 2):
-                    ans.append([s, r, 1])
-                    found = True
-                elif self.cube.cube[s][1][0] == color:
-                    ans.append([s, 1, 0])
-                    found = True
-                elif self.cube.cube[s][1][2] == color:
-                    ans.append([s, 1, 2])
-                    found = True
-                if found:
-                    break
-            if found:
-                break
         neighbor_dict = {(0, 0, 1): [4, 0, 1], (4, 0, 1): [0, 0, 1],
                          (0, 1, 0): [1, 0, 1], (1, 0, 1): [0, 1, 0],
                          (0, 2, 1): [2, 0, 1], (2, 0, 1): [0, 2, 1],
@@ -179,6 +163,37 @@ class LayerByLayer(object):
                          (5, 1, 0): [1, 2, 1], (1, 2, 1): [5, 1, 0],
                          (5, 1, 2): [3, 2, 1], (3, 2, 1): [5, 1, 2],
                          (5, 2, 1): [4, 2, 1], (4, 2, 1): [5, 2, 1]}
+        found = False
+        for s in range(6):
+            for r in range(3):
+                if s == 5:
+                    if self._coordinate_to_color(neighbor_dict[(s, r, 1)]) != \
+                            self.cube.cube[neighbor_dict[(s, r, 1)][0]][1][1] and (r == 0 or r == 2):
+                        ans.append([s, r, 1])
+                        found = True
+                    elif self._coordinate_to_color(neighbor_dict[(s, 1, 0)]) != \
+                            self.cube.cube[neighbor_dict[(s, 1, 0)][0]][1][1]:
+                        ans.append([s, 1, 0])
+                        found = True
+                    elif self._coordinate_to_color(neighbor_dict[(s, 1, 2)]) != \
+                            self.cube.cube[neighbor_dict[(s, 1, 2)][0]][1][1]:
+                        ans.append([s, 1, 2])
+                        found = True
+                else:
+                    if self.cube.cube[s][r][1] == color and (r == 0 or r == 2):
+                        ans.append([s, r, 1])
+                        found = True
+                    elif self.cube.cube[s][1][0] == color:
+                        ans.append([s, 1, 0])
+                        found = True
+                    elif self.cube.cube[s][1][2] == color:
+                        ans.append([s, 1, 2])
+                        found = True
+                if found:
+                    break
+
+            if found:
+                break
         ans.append(neighbor_dict[tuple(ans[0])])
         return ans
 
@@ -251,7 +266,7 @@ class LayerByLayer(object):
                     if goal_coord[2] == 0:
                         rot_side = 1
                         rot_dir = 2
-                        if rot_dir[1] == 2:
+                        if goal_coord[1] == 2:
                             rot_dir = 0
                         rot_dict[rot_side][rot_dir]()
                         rot_dict[0][rot_dir]()
@@ -636,6 +651,8 @@ class LayerByLayer(object):
         self._orient_corners_TL(0)
 
     def _orient_corners_TL(self, side=0):
+        if self.cube.solved():
+            return
         center = self.cube.cube[side][1][1]
         corner_coords = [(side, 0, 0), (side, 0, 2), (side, 2, 0), (side, 2, 2)]
         opposite_side_dict = {0: 5, 1: 3, 2: 4, 3: 1, 4: 2, 5: 0}
