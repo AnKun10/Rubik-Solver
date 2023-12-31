@@ -52,16 +52,22 @@ def main():
             temp_cube = deepcopy(cube)
             solver = LayerByLayer(temp_cube)
             solution = solver.solve()
-            print("SOLUTION: ", end="")
-            for move in solution:
-                print(move, end=" ")
+            if solution:
+                print("SOLUTION: ", end="")
+                for move in solution:
+                    print(move, end=" ")
+            else:
+                print("RUBIK CUBE IS ALREADY IN SOLVED STATE!")
         elif solver_choice == 3:
             temp_cube = BFSBBCube(state=state)
             solver = BFSBB(cube=temp_cube)
             solution = solver.solve()
-            print("SOLUTION: ", end="")
-            for move in solution:
-                print(move, end=" ")
+            if solution:
+                print("SOLUTION: ", end="")
+                for move in solution:
+                    print(move, end=" ")
+            else:
+                print("SOLUTION IS NOT FOUND!")
         elif solver_choice == 4:
             solver = Kociemba(state=state)
             print("SOLUTION: ", end="")
