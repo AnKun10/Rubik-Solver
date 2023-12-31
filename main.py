@@ -50,7 +50,7 @@ def main():
             state = detect_new_state()
             break
         elif input_choice == 2:
-            state = input()
+            state = input("TYPE YOUR RUBIK CUBE STATE: ")
             break
         elif input_choice == 0:
             return
@@ -76,7 +76,7 @@ def main():
             solver = LayerByLayer(temp_cube)
             solution = solver.solve()
             if solution:
-                print("SOLUTION: ", end="")
+                print("LBL'S SOLUTION: ", end="")
                 for move in solution:
                     print(move, end=" ")
             else:
@@ -86,14 +86,14 @@ def main():
             solver = BFSBB(cube=temp_cube)
             solution = solver.solve()
             if solution:
-                print("SOLUTION: ", end="")
+                print("BFSBB'S SOLUTION: ", end="")
                 for move in solution:
                     print(move, end=" ")
             else:
                 print("SOLUTION IS NOT FOUND!")
         elif solver_choice == 4:
             solver = Kociemba(state=state)
-            print("SOLUTION: ", end="")
+            print("KOCIEMBA'S SOLUTION: ", end="")
             solver.solve()
         elif solver_choice == 0:
             break
