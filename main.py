@@ -10,6 +10,14 @@ def detect_new_state():
     return detector.state
 
 
+def show_input_options():
+    print("======================== INPUT TYPE ========================")
+    print("1, COLOR DETECTOR.")
+    print("2, STRING STATE.")
+    print("0, QUIT.")
+    print("============================================================")
+
+
 def show_detector_notes():
     print("=============================== RUBIK COLOR DETECTOR ===============================")
     print("1, PRESS 't' TO CAPTURE A SIDE FACELETS' COLOR.")
@@ -18,7 +26,7 @@ def show_detector_notes():
     print("====================================================================================")
 
 
-def show_options():
+def show_solver_options():
     print("=============================== RUBIK CUBE SOLVER ===============================")
     print("1, COLOR DETECTING NEW RUBIK CUBE.")
     print("2, LAYER BY LAYER.")
@@ -30,14 +38,29 @@ def show_options():
 
 
 def main():
-    show_detector_notes()
-
-    state = detect_new_state()
+    show_input_options()
+    while True:
+        input_choice = -1
+        try:
+            input_choice = int(input("CHOOSE INPUT TYPE (INT): "))
+        except ValueError:
+            print("INVALID INPUT! PLEASE TRY AGAIN!")
+        if input_choice == 1:
+            show_detector_notes()
+            state = detect_new_state()
+            break
+        elif input_choice == 2:
+            state = input()
+            break
+        elif input_choice == 0:
+            return
+        else:
+            print("INVALID INPUT! PLEASE TRY AGAIN!")
     cube = RubikCube(state=state)
     cube.show()
     solution = []
 
-    show_options()
+    show_solver_options()
     while True:
         solver_choice = -1
         try:
