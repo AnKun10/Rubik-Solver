@@ -4,7 +4,7 @@ from copy import deepcopy
 
 
 class RubikCube:
-    def __init__(self, n=3, colors=['w', 'o', 'g', 'r', 'b', 'y'], state=None, history=[]):
+    def __init__(self, n=3, colors=['Y', 'R', 'G', 'O', 'B', 'W'], state=None, history=[]):
         """
         Initializes a new Rubik Cube
         :param n: (int) size of the nxn Rubik Cube
@@ -543,7 +543,7 @@ class RubikCube:
 
 
 class BFSBBCube(RubikCube):
-    def __init__(self, n=3, colors=['w', 'o', 'g', 'r', 'b', 'y'], state=None, history=[]):
+    def __init__(self, n=3, colors=['Y', 'R', 'G', 'O', 'B', 'W'], state=None, history=[]):
         super().__init__(n, colors, state, history)
 
     def _validate_state(self):
