@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Rubik's Cube Solver** project is designed to identify the colors of a Rubik's Cube and implement four distinct solving algorithms: Layer by Layer, BFS & BB (Breadth-First Search & Bi-Directional BFS), Kociemba, and Koft. These algorithms are implemented in Python. Subsequently, the project evaluates and compares the effectiveness of these algorithms in solving the Rubik's Cube.
+The **Rubik's Cube Solver** project is designed to detect the colors of a Rubik's Cube and implement four distinct solving algorithms: Layer by Layer, BFS & BB (Breadth-First Search & Bi-Directional BFS), Kociemba, and Koft. These algorithms are implemented in Python. Subsequently, the project evaluates and compares the effectiveness of these algorithms in solving the Rubik's Cube.
 
 ## Usage
 
