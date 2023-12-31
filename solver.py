@@ -1,6 +1,7 @@
 from random import choice
 from copy import deepcopy
 from rubikcube import RubikCube, BFSBBCube
+import twophase.solver as sv
 
 
 class LayerByLayer(object):
@@ -8,14 +9,10 @@ class LayerByLayer(object):
         self.cube = cube
 
     def solve(self):
-        if self.cube.solved():
-            print("CUBE HAS ALREADY IN SOLVED STATE")
-            return
         self.FL()
         self.SL()
         self.TL()
-        print("SOLUTION:")
-        self.cube.show_history()
+        return self.cube.history
 
     def cross_FL(self):
         down_center = self.cube.cube[5][1][1]
@@ -835,3 +832,26 @@ class BFSBB(object):
             return self.solve(node_queue=sorted(node_queue, key=lambda x: x[2], reverse=True))
         except RecursionError:
             print("Maximum recursion depth exceeded.")
+
+
+class Kociemba:
+    def __init__(self, state):
+        # Initialize a list of 6 sub-arrays for each face of the Rubik's Cube
+        list_of_lists = [[] for _ in range(6)]
+        for i in range(54):
+            # Divide the string 'st' into sub-arrays of 9 characters and add them to list_of_lists
+            list_of_lists[i // 9].append(state[i])
+
+        # Reorder the sub-arrays according to a specific order
+        od = [0, 3, 2, 5, 1, 4]
+        new_list = ''
+        self.state = ''
+        dict = {'W': 'D', 'G': 'F', 'R': 'L', 'O': 'R', 'B': 'B', 'Y': 'U'}
+        for i in od:
+            for j in range(9):
+                new_list += list_of_lists[i][j]
+        for char in new_list:
+            self.state += dict[char]
+
+    def solve(self):
+        print(sv.solve(self.state, 19, 2))

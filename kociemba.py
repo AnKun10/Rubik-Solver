@@ -1,4 +1,4 @@
-import twophase.solver  as sv
+import twophase.solver as sv
 #import twophase.client_gui
 class Kociemba:
     def __init__(self, st):

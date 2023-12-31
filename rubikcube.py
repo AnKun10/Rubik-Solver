@@ -98,14 +98,27 @@ class RubikCube:
         :return: None
         """
         rot_num = randint(min_rot, max_rot)
-        # Action = 0 (U), 1 (U2), 3 (Ui), 4 (L), ... , 16 (D2), 17(Di)
-        actions = [self.U, self.U2, self.Ui, self.L, self.L2, self.Li, self.F, self.F2, self.Fi, self.R, self.R2,
-                   self.Ri, self.B, self.B2, self.Bi, self.D, self.D2, self.Di]
+        next_rot_side_dict = {"U": [1, 2, 3, 4, 5], "U2": [1, 2, 3, 4, 5], "U'": [1, 2, 3, 4, 5],
+                              "L": [0, 2, 3, 4, 5], "L2": [0, 2, 3, 4, 5], "L'": [0, 2, 3, 4, 5],
+                              "F": [0, 1, 3, 4, 5], "F2": [0, 1, 3, 4, 5], "F'": [0, 1, 3, 4, 5],
+                              "R": [0, 1, 2, 4, 5], "R2": [0, 1, 2, 4, 5], "R'": [0, 1, 2, 4, 5],
+                              "B": [0, 1, 2, 3, 5], "B2": [0, 1, 2, 3, 5], "B'": [0, 1, 2, 3, 5],
+                              "D": [0, 1, 2, 3, 4], "D2": [0, 1, 2, 3, 4], "D'": [0, 1, 2, 3, 4]}
+        rot_dict = {0: [self.U, self.U2, self.Ui],
+                    1: [self.L, self.L2, self.Li],
+                    2: [self.F, self.F2, self.Fi],
+                    3: [self.R, self.R2, self.Ri],
+                    4: [self.B, self.B2, self.Bi],
+                    5: [self.D, self.D2, self.Di]}
 
         for _ in range(rot_num):
-            a = choice(range(len(actions)))
-            r = randint(0, self.n - 1)
-            actions[a]()
+            dir = choice(range(3))
+            rot_side = -1
+            if self.history:
+                rot_side = choice(next_rot_side_dict[self.history[len(self.history) - 1]])
+            else:
+                rot_side = choice(range(6))
+            rot_dict[rot_side][dir]()
         self._update_state()
         self.clear_history()
 
@@ -532,26 +545,6 @@ class RubikCube:
 class BFSBBCube(RubikCube):
     def __init__(self, n=3, colors=['w', 'o', 'g', 'r', 'b', 'y'], state=None, history=[]):
         super().__init__(n, colors, state, history)
-        # self.history = history
-        # self.state = state
-        # if state:
-        #     self.n = int(sqrt(len(state) / 6))
-        #     self.colors = []
-        #     for c in state:
-        #         if c not in self.colors:
-        #             self.colors.append(c)
-        #         if len(self.colors) == 6:
-        #             break
-        #     self.cube = [[[c for c in state[r + s:r + s + self.n]] for r in range(0, self.n ** 2, self.n)] for s in
-        #                  range(0, len(state), 9)]
-        #     if not self._validate_state():
-        #         print("--------------INVALID INPUT STATE--------------")
-        #         print("------------------RESET CUBE------------------")
-        #         self.reset()
-        # else:
-        #     self.n = n
-        #     self.colors = colors
-        #     self.reset()
 
     def _validate_state(self):
         if len(self.colors) != 6:
@@ -613,13 +606,28 @@ class BFSBBCube(RubikCube):
     def shuffle(self, min_rot=10, max_rot=100):
         rot_num = randint(min_rot, max_rot)
         # Action = 0 (U), 1 (U2), 3 (Ui), 4 (L), ... , 16 (D2), 17(Di)
-        actions = [self.U, self.U2, self.Ui, self.L, self.L2, self.Li, self.F, self.F2, self.Fi, self.R, self.R2,
-                   self.Ri, self.B, self.B2, self.Bi, self.D, self.D2, self.Di]
+        rot_num = randint(min_rot, max_rot)
+        next_rot_side_dict = {"U": [1, 2, 3, 4, 5], "U2": [1, 2, 3, 4, 5], "U'": [1, 2, 3, 4, 5],
+                              "L": [0, 2, 3, 4, 5], "L2": [0, 2, 3, 4, 5], "L'": [0, 2, 3, 4, 5],
+                              "F": [0, 1, 3, 4, 5], "F2": [0, 1, 3, 4, 5], "F'": [0, 1, 3, 4, 5],
+                              "R": [0, 1, 2, 4, 5], "R2": [0, 1, 2, 4, 5], "R'": [0, 1, 2, 4, 5],
+                              "B": [0, 1, 2, 3, 5], "B2": [0, 1, 2, 3, 5], "B'": [0, 1, 2, 3, 5],
+                              "D": [0, 1, 2, 3, 4], "D2": [0, 1, 2, 3, 4], "D'": [0, 1, 2, 3, 4]}
+        rot_dict = {0: [self.U, self.U2, self.Ui],
+                    1: [self.L, self.L2, self.Li],
+                    2: [self.F, self.F2, self.Fi],
+                    3: [self.R, self.R2, self.Ri],
+                    4: [self.B, self.B2, self.Bi],
+                    5: [self.D, self.D2, self.Di]}
 
         for _ in range(rot_num):
-            a = choice(range(len(actions)))
-            r = randint(0, self.n - 1)
-            actions[a](self.cube, self.history)
+            dir = choice(range(3))
+            rot_side = -1
+            if self.history:
+                rot_side = choice(next_rot_side_dict[self.history[len(self.history) - 1]])
+            else:
+                rot_side = choice(range(6))
+            rot_dict[rot_side][dir](self.cube, self.history)
         self.clear_history()
 
     def clear_history(self):
@@ -974,9 +982,3 @@ class BFSBBCube(RubikCube):
     def D2(self, cube, history):
         self.D(cube, history)
         self.D(cube, history)
-
-
-cube = BFSBBCube()
-cube.show()
-cube.R(cube.cube, cube.history)
-cube.show()
