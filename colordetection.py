@@ -95,17 +95,13 @@ class ColorDetector:
                                                     j * big_square_size + big_square_size // 4: (j + 1) * big_square_size - big_square_size // 4]
 
                         small_square_hsv = cv2.cvtColor(small_square, cv2.COLOR_BGR2HSV)
-                        for x in range(small_square_hsv.shape[0]):
-                            for y in range(small_square_hsv.shape[1]):
-                                if small_square_hsv[x, y, 1] >= 80:  # Check value of S
-                                    small_square_hsv[x, y, 1] = 180  # Set S value to 255
                         avg_color = cv2.mean(small_square_hsv)[:3]  # Calculate average color
 
                         color_name = self.get_color_name(avg_color)
                         colors.append(color_name)
                         avg.append(avg_color)
                 print(colors)
-                print(avg)
+                #print(avg)
                 cv2.imshow('Average Colors', grid_frame)
 
             if cv2.waitKey(1) == ord('s'):
