@@ -13,7 +13,15 @@ cube = RubikCube()
 #         continue
 #     break
 configs = []
-rot_nums = [3, 4, 5, 7, 10, 20, 50, 80, 100]
+rot_nums = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+            20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+            50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
+            80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 f = open("test_set.txt", "w")
 for rot_num in rot_nums:
     cube.shuffle(min_rot=rot_num, max_rot=rot_num)
@@ -51,8 +59,5 @@ def KociembaTime(state):
     return end - start
 
 
-time = []
-for config in configs:
-    print(BFSBBTime(state=config))
-    time.append(round(BFSBBTime(state=config), 6))
-print(time)
+file = open("test_solution.txt", "w")
+f = open("")
