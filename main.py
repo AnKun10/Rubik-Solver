@@ -65,7 +65,6 @@ def main():
         elif solver_choice == 4:
             solver = Kociemba(state=state)
             solver.solve()
-            break
         elif solver_choice == 0:
             break
         else:
