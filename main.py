@@ -1,6 +1,7 @@
 from solver import LayerByLayer, BFSBB, Kociemba
 from rubikcube import RubikCube, BFSBBCube
 from colordetection import ColorDetector
+from copy import deepcopy
 
 
 def main():
@@ -26,20 +27,19 @@ def main():
         except ValueError:
             print("INVALID INPUT! PLEASE TRY AGAIN!")
         if solver_choice == 1:
-            solver = LayerByLayer(cube)
+            temp_cube = deepcopy(cube)
+            solver = LayerByLayer(temp_cube)
             solution = solver.solve()
             print("SOLUTION: ", end="")
             for move in solution:
                 print(move, end=" ")
-            break
         elif solver_choice == 2:
-            cube = BFSBBCube(state=state)
+            temp_cube = BFSBBCube(state=state)
             solver = BFSBB(cube=cube)
             solution = solver.solve()
             print("SOLUTION: ", end="")
             for move in solution:
                 print(move, end=" ")
-            break
         elif solver_choice == 3:
             solver = Kociemba(state=state)
             solver.solve()
@@ -48,6 +48,7 @@ def main():
             break
         else:
             print("INVALID INPUT! PLEASE TRY AGAIN!")
+
 
 if __name__ == "__main__":
     main()
