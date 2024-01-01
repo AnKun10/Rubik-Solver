@@ -32,7 +32,6 @@ def show_solver_options():
     print("2, LAYER BY LAYER.")
     print("3, BFS & BB.")
     print("4, KOCIEMBA.")
-    print("5, KORF.")
     print("0, QUIT.")
     print("=================================================================================")
 
