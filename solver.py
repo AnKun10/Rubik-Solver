@@ -863,6 +863,7 @@ class Kociemba:
         od = [0, 3, 2, 5, 1, 4]
         new_list = ''
         self.state = ''
+        self.step = 0
         dict = {'W': 'D', 'G': 'F', 'R': 'L', 'O': 'R', 'B': 'B', 'Y': 'U'}
         for i in od:
             for j in range(9):
