@@ -863,6 +863,7 @@ class Kociemba:
         od = [0, 3, 2, 5, 1, 4]
         new_list = ''
         self.state = ''
+        self.step = 0
         dict = {'W': 'D', 'G': 'F', 'R': 'L', 'O': 'R', 'B': 'B', 'Y': 'U'}
         for i in od:
             for j in range(9):
@@ -870,5 +871,9 @@ class Kociemba:
         for char in new_list:
             self.state += dict[char]
 
-    def solve(self):
-        print(sv.solve(self.state, 19, 2))
+    def solve_cube(self):
+        sol = sv.solve(self.st)
+        sol = sol.replace('3', "'")
+        solution = sol.split()
+        print(sol)
+        self.step = len(solution) - 1
