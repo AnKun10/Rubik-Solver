@@ -14,7 +14,10 @@ To install the necessary libraries, execute the following command:
 pip install -r requirements.txt
 ```
 
-Run file main.py  
+To run the program, execute the following command:
+```bash
+python main.py
+```
 From the UI screen, you have 2 options:
   - Use your camera to detect the state of the shuffled Rubik's Cube 
   - You can directly type the cube definition string. A solved cube has the string 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
