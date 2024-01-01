@@ -35,4 +35,9 @@ OUTPUT:
 KOCIEMBA SOLUTION: "F1 L2 U2 F1 R2 F1 D2 R1 F3 U2 F2 D2 L2 B3 L2 B1 D2 B1 (18f)"
 LAYER BY LAYER SOLUTION: "B' R B U2 L U L' F U F' U' F' U' F U2 B' U B U L U' L' U L' U L U F U' F' R U R' U' F' U' F U' R U' R' U' F' U F R U R' U R U2 R' F U F' U F U2 F' U2 L U' R' U L' U' R B' D' B D B' D' B D B' D' B D B' D' B D U2 B' D' B D B' D' B D B' D' B D B' D' B D U B' D' B D B' D' B D B' D' B D B' D' B D U"
 ```
+### Usage for Korf:
+- Run file bfs_corner_db.cpp to create a database in file cornerDB.bin  
+- Next, run dls_edgeDB.cpp to create the second and the third database in files edge1DB.bin and edge2DB.bin, respectively
+- Finally run the file KorfSolver.cpp 
+
 
