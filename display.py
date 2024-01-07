@@ -257,6 +257,8 @@ while True:
                 detector.color_detecting()
                 if detector.validate_state():
                     cube = RubikCube(state=detector.state)
+                    solution = []
+                    solution_steps = 0
             if LBL_button.rect.collidepoint(event.pos):
                 temp_cube = deepcopy(cube)
                 solver = LayerByLayer(temp_cube)
