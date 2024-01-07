@@ -256,6 +256,7 @@ while True:
                 detector = ColorDetector()
                 detector.color_detecting()
                 if detector.validate_state():
+                    state_text = detector.state
                     cube = RubikCube(state=detector.state)
                     solution = []
                     solution_steps = 0
