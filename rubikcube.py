@@ -249,6 +249,7 @@ class RubikCube:
 
     def U(self):
         self._horizontal_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "U2":
                 self.history.pop()
@@ -266,6 +267,7 @@ class RubikCube:
     def U2(self):
         self._horizontal_rotation(0, 0)
         self._horizontal_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "U2":
                 self.history.pop()
@@ -282,6 +284,7 @@ class RubikCube:
 
     def Ui(self):
         self._horizontal_rotation(0, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "U2":
                 self.history.pop()
@@ -298,6 +301,7 @@ class RubikCube:
 
     def L(self):
         self._vertical_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "L2":
                 self.history.pop()
@@ -315,6 +319,7 @@ class RubikCube:
     def L2(self):
         self._vertical_rotation(0, 0)
         self._vertical_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "L2":
                 self.history.pop()
@@ -331,6 +336,7 @@ class RubikCube:
 
     def Li(self):
         self._vertical_rotation(0, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "L2":
                 self.history.pop()
@@ -347,6 +353,7 @@ class RubikCube:
 
     def F(self):
         self._side_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "F2":
                 self.history.pop()
@@ -364,6 +371,7 @@ class RubikCube:
     def F2(self):
         self._side_rotation(self.n - 1, 1)
         self._side_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "F2":
                 self.history.pop()
@@ -380,6 +388,7 @@ class RubikCube:
 
     def Fi(self):
         self._side_rotation(self.n - 1, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "F2":
                 self.history.pop()
@@ -396,6 +405,7 @@ class RubikCube:
 
     def R(self):
         self._vertical_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "R2":
                 self.history.pop()
@@ -413,6 +423,7 @@ class RubikCube:
     def R2(self):
         self._vertical_rotation(self.n - 1, 1)
         self._vertical_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "R2":
                 self.history.pop()
@@ -429,6 +440,7 @@ class RubikCube:
 
     def Ri(self):
         self._vertical_rotation(self.n - 1, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "R2":
                 self.history.pop()
@@ -445,6 +457,7 @@ class RubikCube:
 
     def B(self):
         self._side_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "B2":
                 self.history.pop()
@@ -462,6 +475,7 @@ class RubikCube:
     def B2(self):
         self._side_rotation(0, 0)
         self._side_rotation(0, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "B2":
                 self.history.pop()
@@ -478,6 +492,7 @@ class RubikCube:
 
     def Bi(self):
         self._side_rotation(0, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "B2":
                 self.history.pop()
@@ -494,6 +509,7 @@ class RubikCube:
 
     def D(self):
         self._horizontal_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "D2":
                 self.history.pop()
@@ -511,6 +527,7 @@ class RubikCube:
     def D2(self):
         self._horizontal_rotation(self.n - 1, 1)
         self._horizontal_rotation(self.n - 1, 1)
+        self._update_state()
         if self.history:
             if self.history[-1] == "D2":
                 self.history.pop()
@@ -527,6 +544,7 @@ class RubikCube:
 
     def Di(self):
         self._horizontal_rotation(self.n - 1, 0)
+        self._update_state()
         if self.history:
             if self.history[-1] == "D2":
                 self.history.pop()

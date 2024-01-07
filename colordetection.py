@@ -1,5 +1,6 @@
 import cv2
 
+
 class ColorDetector:
     def __init__(self) -> None:
         self.state = ""
@@ -17,7 +18,7 @@ class ColorDetector:
             return 'W'
         if h < 6 or h > 170:
             return 'R'
-        elif 6<= h < 18:
+        elif 6 <= h < 18:
             return 'O'
         elif 18 <= h <= 35:
             return 'Y'
@@ -91,8 +92,10 @@ class ColorDetector:
                 avg = []
                 for i in range(cube_size):
                     for j in range(cube_size):
-                        small_square = cropped_frame[i * big_square_size + big_square_size // 4: (i + 1) * big_square_size - big_square_size // 4,
-                                                    j * big_square_size + big_square_size // 4: (j + 1) * big_square_size - big_square_size // 4]
+                        small_square = cropped_frame[i * big_square_size + big_square_size // 4: (
+                                                                                                             i + 1) * big_square_size - big_square_size // 4,
+                                       j * big_square_size + big_square_size // 4: (
+                                                                                               j + 1) * big_square_size - big_square_size // 4]
 
                         small_square_hsv = cv2.cvtColor(small_square, cv2.COLOR_BGR2HSV)
                         avg_color = cv2.mean(small_square_hsv)[:3]  # Calculate average color
@@ -101,7 +104,7 @@ class ColorDetector:
                         colors.append(color_name)
                         avg.append(avg_color)
                 print(colors)
-                #print(avg)
+                # print(avg)
                 cv2.imshow('Average Colors', grid_frame)
 
             if cv2.waitKey(1) == ord('s'):
@@ -117,6 +120,16 @@ class ColorDetector:
 
         cap.release()
         cv2.destroyAllWindows()
+
+    def validate_state(self):
+        if len(self.state) == 54:
+            color_counter_dict = {'W': 0, 'R': 0, 'G': 0, 'B': 0, 'O': 0, 'Y': 0}
+            for color in self.state:
+                color_counter_dict[color] += 1
+            if list(color_counter_dict.values()).count(9) != 6:
+                return False
+            return True
+        return False
 
 if __name__ == "__main__":
     detector = ColorDetector()

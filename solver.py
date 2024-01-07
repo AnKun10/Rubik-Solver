@@ -871,9 +871,11 @@ class Kociemba:
         for char in new_list:
             self.state += dict[char]
 
-    def solve_cube(self):
-        sol = sv.solve(self.st)
+    def solve(self):
+        sol = sv.solve(self.state)
         sol = sol.replace('3', "'")
+        sol = sol.replace('1', "")
         solution = sol.split()
-        print(sol)
-        self.step = len(solution) - 1
+        solution.pop()
+        self.step = len(solution)
+        return solution
