@@ -63,6 +63,17 @@ def get_up_side_colors(side, arrow_counter, flipped):
     return colors
 
 
+def validate_state(state):
+    if len(state) == 54:
+        color_counter_dict = {'W': 0, 'R': 0, 'G': 0, 'B': 0, 'O': 0, 'Y': 0}
+        for color in state:
+            color_counter_dict[color] += 1
+        if list(color_counter_dict.values()).count(9) != 6:
+            return False
+        return True
+    return False
+
+
 cube = RubikCube()
 cube.show()
 color_dict = {'W': 'White', 'R': 'Red', 'G': 'Green', 'B': 'Blue', 'O': 'Orange', 'Y': 'Yellow'}
@@ -189,6 +200,11 @@ scramble_button = Button(font_setting, "Scramble", 150, 50, (1050, 125), "#EF404
 scramble_text = ''
 scramble_text_rect = pygame.Rect((1220, 125), (50, 50))
 scramble_text_active = False
+font_state = pygame.font.Font('font/Setting.ttf', 15)
+state_button = Button(font_setting, "State", 100, 50, (1150, 300), "#EF4040")
+state_text = ''
+state_text_rect = pygame.Rect((1010, 375), (380, 25))
+state_active = False
 LBL_button = Button(font_setting, "LBL", 75, 50, (1050, 525), "#365486")
 BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1150, 525), "#365486")
 Korf_button = Button(font_setting, "Korf", 75, 50, (1275, 525), "#365486")
@@ -228,8 +244,14 @@ while True:
                         validate_scramble = False
                     if validate_scramble:
                         cube.shuffle(min_rot=scramble_num, max_rot=scramble_num)
-                        print(cube.history)
                         cube.show()
+            if state_text_rect.collidepoint(event.pos):
+                state_active = True
+            else:
+                state_active = False
+            if state_button.rect.collidepoint(event.pos):
+                if validate_state(state_text):
+                    cube = RubikCube(state=state_text)
             if detection_button.rect.collidepoint(event.pos):
                 detector = ColorDetector()
                 detector.color_detecting()
@@ -256,6 +278,11 @@ while True:
                     scramble_text = scramble_text[:-1]
                 else:
                     scramble_text += event.unicode
+            if state_active:
+                if event.key == pygame.K_BACKSPACE:
+                    state_text = state_text[:-1]
+                else:
+                    state_text += event.unicode
 
     if solution:
         print(solution)
@@ -278,10 +305,15 @@ while True:
     solution_steps_surf = font_setting.render(f"Solution Steps: {solution_steps}", True, "#A1EEBD")
     solution_steps_rect = solution_steps_surf.get_rect(center=(1200, 490))
     screen.blit(solution_steps_surf, solution_steps_rect)
+    pygame.draw.rect(screen, "White", state_text_rect)
+    state_text_surf = font_state.render(state_text, True, "Black")
+    screen.blit(state_text_surf, (state_text_rect.x + 5, state_text_rect.y + 5))
+    state_text_rect.w = max(380, state_text_surf.get_width() + 10)
     pygame.draw.rect(screen, "White", scramble_text_rect)
     scramble_text_surf = font_setting.render(scramble_text, True, "Black")
     screen.blit(scramble_text_surf, (scramble_text_rect.x + 5, scramble_text_rect.y + 5))
     scramble_text_rect.w = max(50, scramble_text_surf.get_width() + 10)
+    state_button.draw()
     scramble_button.draw()
     detection_button.draw()
     LBL_button.draw()
