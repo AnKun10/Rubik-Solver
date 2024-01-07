@@ -75,6 +75,7 @@ rot_dict = {"U": cube.U, "U'": cube.Ui, "U2": cube.U2,
             "B": cube.B, "B'": cube.Bi, "B2": cube.B2,
             "D": cube.D, "D'": cube.Di, "D2": cube.D2}
 solution = []
+solution_steps = 0
 front_side = 2
 right_side = 3
 up_side = 0
@@ -239,13 +240,16 @@ while True:
                 solver = LayerByLayer(temp_cube)
                 solver.solve()
                 solution = temp_cube.history
+                solution_steps = len(solution)
             if Kociemba_button.rect.collidepoint(event.pos):
                 solver = Kociemba(cube.state)
                 solution = solver.solve()
+                solution_steps = len(solution)
             if BFSBB_button.rect.collidepoint(event.pos):
                 temp_cube = BFSBBCube(state=cube.state)
                 solver = BFSBB(temp_cube)
                 solution = solver.solve()
+                solution_steps = len(solution)
         if event.type == pygame.KEYDOWN:
             if scramble_text_active:
                 if event.key == pygame.K_BACKSPACE:
@@ -271,10 +275,13 @@ while True:
     screen.blit(arrow_left_surf, arrow_left_rect)
     screen.blit(arrow_right_surf, arrow_right_rect)
     screen.blit(arrow_flip_surf, arrow_flip_rect)
+    solution_steps_surf = font_setting.render(f"Solution Steps: {solution_steps}", True, "#A1EEBD")
+    solution_steps_rect = solution_steps_surf.get_rect(center=(1200, 490))
+    screen.blit(solution_steps_surf, solution_steps_rect)
     pygame.draw.rect(screen, "White", scramble_text_rect)
     scramble_text_surf = font_setting.render(scramble_text, True, "Black")
-    screen.blit(scramble_text_surf, (scramble_text_rect.x+5, scramble_text_rect.y+5))
-    scramble_text_rect.w = max(50, scramble_text_surf.get_width()+10)
+    screen.blit(scramble_text_surf, (scramble_text_rect.x + 5, scramble_text_rect.y + 5))
+    scramble_text_rect.w = max(50, scramble_text_surf.get_width() + 10)
     scramble_button.draw()
     detection_button.draw()
     LBL_button.draw()
