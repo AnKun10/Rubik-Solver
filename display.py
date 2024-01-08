@@ -200,10 +200,10 @@ scramble_button = Button(font_setting, "Scramble", 150, 50, (1050, 125), "#EF404
 scramble_text = ''
 scramble_text_rect = pygame.Rect((1220, 125), (50, 50))
 scramble_text_active = False
-font_state = pygame.font.Font('font/Setting.ttf', 15)
+font_state = pygame.font.Font('font/Setting.ttf', 12)
 state_button = Button(font_setting, "State", 100, 50, (1150, 300), "#EF4040")
 state_text = ''
-state_text_rect = pygame.Rect((1010, 375), (380, 25))
+state_text_rect = pygame.Rect((1010, 375), (380, 20))
 state_active = False
 LBL_button = Button(font_setting, "LBL", 75, 50, (1050, 525), "#365486")
 BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1150, 525), "#365486")
@@ -251,13 +251,13 @@ while True:
                 state_active = False
             if state_button.rect.collidepoint(event.pos):
                 if validate_state(state_text):
-                    cube = RubikCube(state=state_text)
+                    cube.update_state(state=state_text)
             if detection_button.rect.collidepoint(event.pos):
                 detector = ColorDetector()
                 detector.color_detecting()
                 if detector.validate_state():
                     state_text = detector.state
-                    cube = RubikCube(state=detector.state)
+                    cube.update_state(state=detector.state)
                     solution = []
                     solution_steps = 0
             if LBL_button.rect.collidepoint(event.pos):

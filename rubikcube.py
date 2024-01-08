@@ -54,6 +54,18 @@ class RubikCube:
         """
         return ''.join([c for s in self.cube for r in s for c in r])
 
+    def update_state(self, state):
+        self.state = state
+        self.clear_history()
+        self.n = int(sqrt(len(state) / 6))
+        self.colors = []
+        for c in state:
+            if c not in self.colors:
+                self.colors.append(c)
+            if len(self.colors) == 6:
+                break
+        self.cube = [[[c for c in state[r + s:r + s + self.n]] for r in range(0, self.n ** 2, self.n)] for s in
+                     range(0, len(state), 9)]
     def reset(self):
         """
         Reset the Rubik Cube to its initial state
@@ -1000,3 +1012,6 @@ class BFSBBCube(RubikCube):
     def D2(self, cube, history):
         self.D(cube, history)
         self.D(cube, history)
+
+cube = RubikCube(state = "RGYWYWGYWBOOBRBYROYRRRGYWGWBBROOROWWGOYGBYROOGYBWWGBBG")
+cube.show()
