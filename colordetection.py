@@ -111,6 +111,7 @@ class ColorDetector:
                 colors_list.append(colors.copy())
                 avg_list.append(avg.copy())
                 print('Data saved')
+                colors = []
             if cv2.waitKey(1) == ord('q'):
                 for lst in colors_list:
                     for char in lst:
