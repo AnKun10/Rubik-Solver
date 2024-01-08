@@ -40,10 +40,6 @@ class Button:
 def get_up_side_colors(side, arrow_counter, flipped):
     if arrow_counter < 0:
         dir = (-arrow_counter) % 4
-        if dir == 1:
-            dir = 3
-        elif dir == 3:
-            dir = 1
     else:
         dir = arrow_counter % 4
     if flipped:
@@ -257,7 +253,6 @@ while True:
                 detector.color_detecting()
                 if detector.validate_state():
                     state_text = detector.state
-                    cube.update_state(state=detector.state)
                     solution = []
                     solution_steps = 0
             if LBL_button.rect.collidepoint(event.pos):
