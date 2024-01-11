@@ -242,6 +242,7 @@ while True:
                         validate_scramble = False
                     if validate_scramble:
                         cube.shuffle(min_rot=scramble_num, max_rot=scramble_num)
+                        state_text = cube.state
                         cube.show()
             if state_text_rect.collidepoint(event.pos):
                 state_active = True
