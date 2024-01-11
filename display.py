@@ -100,12 +100,12 @@ FPS = 10
 pygame.init()
 pygame.display.set_caption("RUBIK SOLVER")
 
-screen = pygame.display.set_mode((1400, 700))
+screen = pygame.display.set_mode((1200, 700))
 clock = pygame.time.Clock()
 background_surf = pygame.image.load('graphics/background.png').convert_alpha()
-background_rect = background_surf.get_rect(center=(700, 350))
+background_rect = background_surf.get_rect(center=(600, 350))
 setting_surf = pygame.image.load('graphics/setting.png').convert_alpha()
-setting_rect = setting_surf.get_rect(topleft=(1000, 0))
+setting_rect = setting_surf.get_rect(topleft=(800, 0))
 
 
 def get_front_points(x, y):
@@ -139,7 +139,7 @@ def get_last_up_point(point1, point2, point3):
 
 
 # FRD point = (500, 450)
-start = (500 - sqrt((3 * N) ** 2 - (3 * FRONT_SKEW) ** 2), 450 - 3 * (FRONT_SKEW + N))
+start = (400 - sqrt((3 * N) ** 2 - (3 * FRONT_SKEW) ** 2), 450 - 3 * (FRONT_SKEW + N))
 front_start_points = [start,
                       (start[0] + sqrt(N ** 2 - FRONT_SKEW ** 2), start[1] + FRONT_SKEW),
                       (start[0] + sqrt((2 * N) ** 2 - (2 * FRONT_SKEW) ** 2), start[1] + 2 * FRONT_SKEW),
@@ -149,7 +149,7 @@ front_start_points = [start,
                       (start[0], start[1] + 2 * N),
                       (start[0] + sqrt(N ** 2 - FRONT_SKEW ** 2), start[1] + 2 * N + FRONT_SKEW),
                       (start[0] + sqrt((2 * N) ** 2 - (2 * FRONT_SKEW) ** 2), start[1] + 2 * N + 2 * FRONT_SKEW)]
-start = (500, 450 - 3 * N)
+start = (400, 450 - 3 * N)
 right_start_points = [start,
                       (start[0] + sqrt(N ** 2 - RIGHT_SKEW ** 2), start[1] - RIGHT_SKEW),
                       (start[0] + sqrt((2 * N) ** 2 - (2 * RIGHT_SKEW) ** 2), start[1] - 2 * RIGHT_SKEW),
@@ -179,34 +179,34 @@ for row in range(3):
 
 arrow_surf = pygame.image.load('graphics/curved-arrow-icon.png').convert_alpha()
 arrow_right_surf = pygame.transform.rotozoom(arrow_surf, 0, 0.15)
-arrow_right_rect = arrow_right_surf.get_rect(center=(615, 520))
+arrow_right_rect = arrow_right_surf.get_rect(center=(515, 520))
 arrow_left_surf = pygame.transform.flip(arrow_right_surf, True, False)
-arrow_left_rect = arrow_left_surf.get_rect(center=(375, 520))
+arrow_left_rect = arrow_left_surf.get_rect(center=(275, 520))
 arrow_surf = pygame.image.load('graphics/flip-arrow.png').convert_alpha()
 arrow_flip_surf = pygame.transform.rotozoom(arrow_surf, 0, 0.3)
-arrow_flip_rect = arrow_flip_surf.get_rect(center=(495, 580))
+arrow_flip_rect = arrow_flip_surf.get_rect(center=(395, 580))
 
 setting_icon_surf = pygame.image.load('graphics/setting-icon.png').convert_alpha()
 setting_icon_surf = pygame.transform.rotozoom(setting_icon_surf, 0, 0.1)
-setting_icon_rect = setting_icon_surf.get_rect(topleft=(1015, 15))
+setting_icon_rect = setting_icon_surf.get_rect(topleft=(815, 15))
 font_side = pygame.font.Font('font/Sidenotion.ttf', 50)
 font_setting = pygame.font.Font('font/Setting.ttf', 30)
-detection_button = Button(font_setting, "Color Detection", 300, 50, (1050, 200), "#EF4040")
-scramble_button = Button(font_setting, "Scramble", 150, 50, (1050, 125), "#EF4040")
+detection_button = Button(font_setting, "Color Detection", 300, 50, (850, 200), "#EF4040")
+scramble_button = Button(font_setting, "Scramble", 150, 50, (850, 125), "#EF4040")
 scramble_text = ''
-scramble_text_rect = pygame.Rect((1220, 125), (50, 50))
+scramble_text_rect = pygame.Rect((1020, 125), (50, 50))
 scramble_text_active = False
 font_state = pygame.font.Font('font/Setting.ttf', 12)
-state_button = Button(font_setting, "State", 100, 50, (1150, 300), "#EF4040")
+state_button = Button(font_setting, "State", 100, 50, (950, 300), "#EF4040")
 state_text = ''
-state_text_rect = pygame.Rect((1010, 375), (380, 20))
+state_text_rect = pygame.Rect((810, 375), (380, 20))
 state_active = False
 # LBL_button = Button(font_setting, "LBL", 75, 50, (1050, 525), "#365486")
-LBL_button = Button(font_setting, "LBL", 100, 50, (1075, 525), "#365486")
+LBL_button = Button(font_setting, "LBL", 100, 50, (875, 525), "#365486")
 # BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1150, 525), "#365486")
-BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1225, 525), "#365486")
+BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1025, 525), "#365486")
 # Korf_button = Button(font_setting, "Korf", 75, 50, (1275, 525), "#365486")
-Kociemba_button = Button(font_setting, "Kociemba", 150, 50, (1125, 600), "#365486")
+Kociemba_button = Button(font_setting, "Kociemba", 150, 50, (925, 600), "#365486")
 
 while True:
     for event in pygame.event.get():
@@ -304,7 +304,7 @@ while True:
     screen.blit(arrow_right_surf, arrow_right_rect)
     screen.blit(arrow_flip_surf, arrow_flip_rect)
     solution_steps_surf = font_setting.render(f"Solution Steps: {solution_steps}", True, "#A1EEBD")
-    solution_steps_rect = solution_steps_surf.get_rect(center=(1200, 490))
+    solution_steps_rect = solution_steps_surf.get_rect(center=(1000, 490))
     screen.blit(solution_steps_surf, solution_steps_rect)
     pygame.draw.rect(screen, "White", state_text_rect)
     state_text_surf = font_state.render(state_text, True, "Black")
@@ -326,14 +326,14 @@ while True:
     front_side_notion_color = cube.state[9 * front_side + 4]
     front_side_notion_surf = font_side.render(f"{side_to_text_dict[front_side]}", True,
                                               color_dict[front_side_notion_color])
-    front_side_notion_rect = front_side_notion_surf.get_rect(center=(200, 350))
+    front_side_notion_rect = front_side_notion_surf.get_rect(center=(100, 350))
     right_side_notion_color = cube.state[9 * right_side + 4]
     right_side_notion_surf = font_side.render(f"{side_to_text_dict[right_side]}", True,
                                               color_dict[right_side_notion_color])
-    right_side_notion_rect = right_side_notion_surf.get_rect(center=(800, 350))
+    right_side_notion_rect = right_side_notion_surf.get_rect(center=(700, 350))
     up_side_notion_color = cube.state[9 * up_side + 4]
     up_side_notion_surf = font_side.render(f"{side_to_text_dict[up_side]}", True, color_dict[up_side_notion_color])
-    up_side_notion_rect = up_side_notion_surf.get_rect(center=(500, 100))
+    up_side_notion_rect = up_side_notion_surf.get_rect(center=(400, 100))
     screen.blit(front_side_notion_surf, front_side_notion_rect)
     screen.blit(right_side_notion_surf, right_side_notion_rect)
     screen.blit(up_side_notion_surf, up_side_notion_rect)
