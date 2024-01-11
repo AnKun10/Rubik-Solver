@@ -201,9 +201,11 @@ state_button = Button(font_setting, "State", 100, 50, (1150, 300), "#EF4040")
 state_text = ''
 state_text_rect = pygame.Rect((1010, 375), (380, 20))
 state_active = False
-LBL_button = Button(font_setting, "LBL", 75, 50, (1050, 525), "#365486")
-BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1150, 525), "#365486")
-Korf_button = Button(font_setting, "Korf", 75, 50, (1275, 525), "#365486")
+# LBL_button = Button(font_setting, "LBL", 75, 50, (1050, 525), "#365486")
+LBL_button = Button(font_setting, "LBL", 100, 50, (1075, 525), "#365486")
+# BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1150, 525), "#365486")
+BFSBB_button = Button(font_setting, "BFSBB", 100, 50, (1225, 525), "#365486")
+# Korf_button = Button(font_setting, "Korf", 75, 50, (1275, 525), "#365486")
 Kociemba_button = Button(font_setting, "Kociemba", 150, 50, (1125, 600), "#365486")
 
 while True:
@@ -316,7 +318,7 @@ while True:
     detection_button.draw()
     LBL_button.draw()
     BFSBB_button.draw()
-    Korf_button.draw()
+    # Korf_button.draw()
     Kociemba_button.draw()
 
     # Side notion text
